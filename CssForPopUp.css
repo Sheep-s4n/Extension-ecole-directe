@@ -1,0 +1,500 @@
+
+/*Vous en avez assez d'être gêné par le fond blanc d'école directe ? Fatigué de ne pas pouvoir changer votre photo de profil ?
+Si c'est le cas, Ecole directe customizer est fait pour vous !
+
+Options actuelles :
+
+- Changer la couleur du dégradé
+- Modifier votre photo de profil
+- Changer la couleur de fond d'ecole direct*/
+
+
+.color {
+    height: 15px;
+    width: 15px;
+    padding: 0px;
+    border: 1px solid rgb(0, 0, 0);
+
+}
+
+.color2{
+
+    height: 15px;
+    width: 15px;
+    padding: 0px;
+    border: 1px solid rgb(0, 0, 0);
+
+}
+
+.backgroundColor{
+    
+    height: 15px;
+    width: 15px;
+    padding: 0px;
+    border: 1px solid rgb(0, 0, 0);
+
+}
+[data-Number="2"].NewColor {
+
+    position: relative;
+    left: 121px;
+    bottom: 25px;
+    height: 15px; 
+    width: 15px; 
+    padding: 0px;
+    padding-left: 1px;
+    border: 1px solid rgb(0, 156, 34); 
+    border-radius: 3px; 
+    background-color: chartreuse; 
+    font-family:monospace;
+    transition-duration: 100ms;
+    transition-property: transform;
+    transition-timing-function: ease-in ;
+}
+
+[data-Number="1"].NewColor {
+    position: relative;
+    left: 121px;
+    bottom: 25px;
+    height: 15px; 
+    width: 15px; 
+    padding: 0px;
+    padding-left: 1px;
+    border: 1px solid rgb(0, 156, 34); 
+    border-radius: 3px; 
+    background-color: chartreuse; 
+    font-family:monospace;
+    transition-duration: 100ms;
+    transition-property: transform;
+    transition-timing-function: ease-in ;
+    
+}
+
+[data-Number="1"].NewColor:hover {
+    
+    transform: scale(1.2);
+}
+
+[data-Number="2"].NewColor:hover {
+    
+    transform: scale(1.2);
+}
+
+.PopUpUi {
+    position: absolute;
+    top: 35%;
+    left: 0px;
+    z-index: 3;
+    border: 3px solid rgb(0, 0, 0);
+    border-radius: 5px;
+    padding: 20px;
+    background-color: white;
+    visibility: hidden;
+}
+
+.Transparent {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.658);
+    z-index: 2;
+    visibility: hidden;
+}
+
+.exit {
+    position : relative;
+    right: -217px;
+    bottom: 13px;
+    height : 15px;
+    width: 15px;
+    padding: 3px;
+    background-color: red;
+    background: url(cross.png);
+    background-size: contain;
+    cursor: pointer;
+}
+
+.exit:hover {
+    filter: brightness(0.8);
+
+}
+
+.Title {
+    display: block;
+    text-align: center;
+    font-size: 20px;
+    color: rgb(34, 34, 34);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    
+}
+
+.colorPicker {
+    position: relative;
+    bottom: 2px;
+    left: 2px;
+    padding: 0px;
+    border-width: 0px;
+    width: 20px;
+    height: 24px;
+    background-color: rgb(255,255,255)
+}
+
+.colorPicker:hover {
+
+        padding: 0px;
+        border-width: 0px;
+        width: 20px;
+        height: 24px;
+        background-color: rgb(255,255,255);
+        cursor: cell;
+
+}
+
+.Submit {
+    background: linear-gradient(rgb(0, 255, 64),rgb(51 207 0));
+    padding: 4px;
+    border: none;
+    border-radius: 3px;
+    position: relative;
+    bottom : 20px;
+    left : calc(50% - calc(49px / 2));   
+    cursor: pointer;
+    
+}
+.Submit:hover {
+    filter: brightness(0.8);    
+}
+
+.CustomColor1 {
+    position: relative;
+    left: 14px;
+    bottom: 7px;
+    height: 15px;   
+    width: 15px;     
+    padding: 0px;     
+    border: 1px solid rgb(0, 0, 0); 
+    background-color: white;
+    visibility: hidden;
+}
+
+
+
+.CustomColor1:hover {
+    filter: brightness(0.8);
+}
+
+.removeCustomColor {
+    background-image: url(Icon/remove.png);
+    background-size: 8px;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    left: 18px;
+    bottom: 7px;
+    height: 15px; 
+    width: 15px; 
+    padding: 0px;
+    padding-left: 1px;
+    border: 1px solid rgb(156, 44, 0); 
+    border-radius: 3px; 
+    background-color: rgb(255, 38, 0); 
+    font-family:monospace;
+    visibility: hidden;
+    transition-duration: 100ms;
+    transition-property: transform;
+    transition-timing-function: ease-in ;
+}
+.removeCustomColor:hover {
+    transform: scale(1.3);
+}
+.CustomColor1Selected {
+    position: relative;
+    left: 14px;
+    bottom: 6px;
+    height: 20px;   
+    width: 20px;     
+    padding: 0px;     
+    border-radius: 3px;
+    border: 2px solid rgb(0, 0, 0); 
+    background-color: white;
+}
+
+.CustomColor1Selected:hover {
+    filter: brightness(0.8);
+}
+
+.removeCustomColor.second {
+    position: relative;
+    left: 18px;
+    bottom: 7px;
+    height: 15px; 
+    width: 15px; 
+    padding: 0px;
+    padding-left: 1px;
+    border: 1px solid rgb(156, 44, 0); 
+    border-radius: 3px; 
+    background-color: rgb(255, 38, 0); 
+    font-family:monospace;
+    visibility: hidden;
+}
+
+.removeCustomColor.second:hover {
+    transform: scale(1.3);
+}
+
+.CustomColor2 {
+    position: relative;
+    left: 14px;
+    bottom: 7px;
+    height: 15px;   
+    width: 15px;     
+    padding: 0px;     
+    border: 1px solid rgb(0, 0, 0); 
+    background-color: white;
+    visibility: hidden;
+}
+
+
+
+.CustomColor2:hover {
+    filter: brightness(0.8);
+}
+
+.CustomColor2Selected {
+    position: relative;
+    left: 14px;
+    bottom: 6px;
+    height : 20px;
+    width: 20px; 
+    padding: 0px;
+    padding-left: 1px;
+    border: 2px solid black; 
+    border-radius: 3px; 
+}
+
+.CustomColor2Selected:hover {
+    filter: brightness(0.8);
+}
+
+.AddProfilePicture {
+    position:absolute;
+    top : -1000px
+}
+
+.CustomPicture {
+    width: 150px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.errorType {
+    display: block;
+     color: red;
+     font-family: fantasy !important;
+     font-size: 17px;
+     text-align: center;
+     
+}
+
+.align {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+#SubmitURL {
+    background: linear-gradient(#00eeff ,#80f7ff);
+    border: none;
+    border-radius: 3px;
+    height: 22px;
+}
+
+#SubmitURL:hover {
+    filter: brightness(0.8);
+}
+
+#URLText {
+    width: 115px;
+    color: #323232;
+    font-family: system-ui;
+    border-color: rgba(0, 0, 0, 0.11);
+    border-radius: 3px;
+    border-width: 1.5px;
+}
+
+#URLText:focus-visible {
+    outline: none !important;
+    border-color: rgb(0, 0, 0) ;
+    border-width: 1px;
+}
+
+::-webkit-input-placeholder {
+    color: #414141;
+}
+
+body {
+  font-family: system-ui ;
+}
+
+.LabelInput {
+    display: inline-block;
+    position: relative;
+    bottom: 8px;
+    background: linear-gradient(#00eeff ,#80f7ff);
+    border: none;
+    border-radius: 3px;
+    padding: 3.5px;
+    right: 12px;
+}
+.LabelInput:hover {
+    filter : brightness(0.8)
+}
+
+#InfoAboutFile {
+    position: relative;
+    top: -8px;
+    left: 84px;
+    margin: -90px;
+}
+
+.Settings {
+    position: fixed;
+    height: 20px;
+    width: 20px;
+    border: none;
+    background-image: url("Icon/Gear.png");
+    background-color: white;
+    background-size: cover;
+    border-radius: 3px;
+    cursor: pointer;
+    transition-duration: 500ms; /* le temp que met la transition a se faire*/
+    transition-delay: 0s; /* le temp avant que elle comence */
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.55, 0.06, 0.68, 0.19);
+}
+.Settings:hover {
+    transform: rotate(360deg) scale(1.1);
+}
+
+::selection {
+    background-color: rgb(98 240 255);
+}
+
+.ParamCheckBox {
+    position: relative;
+    top: 3px;
+    cursor: pointer;
+}
+
+.Disabled {
+    visibility: hidden;
+    width: 100%;
+    position: fixed;
+    right: 0px;
+    z-index: 2;
+    background-color: #ffffffeb;
+    border-top: 3px solid #e7e7e7;
+    border-bottom: 3px solid #e7e7e7;
+}
+
+.Disabled:hover::after {
+    content: 'Allez dans vos paramètres situés en haut à gauche de votre écran pour activer cette fonction. ';
+    position: relative;
+    color: black;
+    display: block;
+    text-align: center;
+    font-family:"Comic Sans MS";
+    font-size: 10px;
+    top : 20%;
+}
+
+.DisabledText1 {
+    position: relative;
+    color: black;
+    display: block;
+    text-align: center;
+    font-family: Impact;
+    font-size: 20px;
+    top : 20%;
+}
+
+.no-wifi {
+    position: fixed;
+    background-image: url("Icon/No_Wifi_icon.png");
+    background-size: contain;
+    height: 28px;
+    width: 28px;
+    left: 33px;
+    top: 5px;
+    visibility: hidden;
+}
+
+#Elogo {
+    display: inline;
+    position: fixed;
+    width: 133px;
+    height: 85px;
+    left: 65px;
+    top: 4px;
+}
+
+.HelpText {
+    color: red;
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    top: 29px;
+    left: 0px;
+    position: fixed;
+}
+
+@keyframes rainbow-text {
+    0% {
+        color: red;
+    }
+    10% {
+        color: rgb(230, 176, 0);
+    }
+    20% {
+        color: rgb(204, 226, 0);
+    }
+    30% {
+        color: rgb(0, 212, 0);
+    }
+    40% {
+        color: rgb(0, 197, 82);
+    }
+    50% {
+        color: rgb(0, 172, 202);
+    }
+    60% {
+        color: rgb(0, 81, 255);
+    }
+    70% {
+        color: rgb(68, 0, 255);
+    }
+    80% {
+        color: rgb(195, 0, 255);
+    }
+    90% {
+        color: rgb(204, 0, 170);
+    }
+    100% {
+        color: rgb(255, 0, 0);
+    }
+
+}
+
+.multicolor-text {
+    display: inline-block;
+    animation: rainbow-text 5s infinite linear
+}
+
+
+#FirstPart {
+    display: block ;
+}

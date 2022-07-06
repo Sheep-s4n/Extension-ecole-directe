@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CssForPopUp.css">
+    <title>Document</title>
+</head>
+<body>
+    <img id="Elogo" src="Icon/Logo.png" alt="Extension Logo">
+    <span class="HelpText"></span>
+    <div class="no-wifi"></div>
+    <div id="Disabled1" class="Disabled" style="Height : 69px ; top : 56px;"><span class="DisabledText1">Désactivé</span></div>
+    <div id="Disabled2" class="Disabled" style="Height: 66px; top: 127px;"><span class="DisabledText1">Désactivé</span></div>
+    <div id="Disabled3" class="Disabled" style="Height: 51px; top: 195px;"><span class="DisabledText1">Désactivé</span></div>
+    <div id="Disabled4" class="Disabled" style="Height: 227px; top: 250px;"><span class="DisabledText1">Désactivé</span></div>
+    <button class="Settings"></button>
+    <div class="Transparent"></div>
+    <div class="PopUpUi">
+        <div class="exit"></div>
+        <span class="Title">Couleur&nbsppersonnalisée</span>
+        <br>
+        <div style="display: flex;">Choisissez&nbspune&nbspcouleur&nbsppersonnalisée&nbsp:<input class="colorPicker" type="color"></div>
+        <br><br><br>
+        <button class="Submit" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Valider</button>
+    </div>
+
+
+    <div id="ParamTransparent" class="Transparent"></div>
+    <div class="PopUpUi" id="ParamUI" style="margin: 20px; top: 126px; left : 15%">
+        <div class="exit" style="position: relative ; right : 15px ; bottom : 15px;"></div>
+        <span class="Title">Paramètres</span><br>
+        <label for="Color1CheckBox">Première couleur :</label><input class="ParamCheckBox" id="Color1CheckBox" type="checkbox"><br>
+        <label for="Color2CheckBox">Deuxième couleur :</label><input  class="ParamCheckBox" id="Color2CheckBox" type="checkbox"><br>
+        <label for="BackgroundColorCheckBox">Couleur de fond:</label><input class="ParamCheckBox" id="BackgroundColorCheckBox" type="checkbox"><br>
+        <label for="ImageColorCheckBox">Image de profil :</label><input class="ParamCheckBox" id="ImageColorCheckBox" type="checkbox"><br>
+        <label for="MulticolorCheckBox">Mode <div class="multicolor-text">multicolor</div> :</label><input class="ParamCheckBox" id="MulticolorCheckBox" type="checkbox">
+    </div>
+
+
+
+    <div class="Transparent second"></div>
+    <div class="PopUpUi second">
+        <div class="exit second"></div>
+        <span class="Title second">Couleur&nbsppersonnalisée</span>
+        <br>
+        <div style="display: flex;">Choisissez&nbspune&nbspcouleur&nbsppersonnalisée&nbsp:<input class="colorPicker second" type="color"></div>
+        <br><br><br>
+        <button class="Submit second" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Submit</button>
+    </div>
+    <div id="MainDiv" style="padding : 50px;height:340px; width: 150px;">
+    <div id="FirstPart">
+        <span class="Title" style="font-size: 13px;">Première couleur</span> <br>
+        <button type="button" class="color">213,0,0</button>
+        <button type="button" class="color">213,100,0</button>
+        <button type="button" class="color">206,213,0</button>
+        <button type="button" class="color">57,213,0</button>
+        <button type="button" class="color">0,213,121</button>
+        <button type="button" class="color">0,213,213</button><br>
+        <button type="button" class="color">0,135,213</button>
+        <button type="button" class="color">0,26,213</button>
+        <button type="button" class="color">213,0,206</button>
+        <button type="button" class="color">213,0,114</button>
+        <button type="button" class="color">35,35,35</button>
+        <button type="button" class="color">220,220,220</button>
+        <button type="button" class="CustomColor1"></button>
+        <button type="button" class="removeCustomColor"></button>
+        <button type="button" data-Number="1" class="NewColor"><img src="./PlusButton.png" height="10" width="10" alt="add"></button>
+    </div>
+    <div id="SecondPart">
+        <br><span class="Title" style="font-size: 13px;">Deuxième couleur</span> <br>
+        <button type="button" class="color2">255,0,0</button>
+        <button type="button" class="color2">255,100,0</button>
+        <button type="button" class="color2">240,213,0</button>
+        <button type="button" class="color2">57,255,0</button>
+        <button type="button" class="color2">0,255,121</button>
+        <button type="button" class="color2">0,255,213</button><br>
+        <button type="button" class="color2">0,135,255</button>
+        <button type="button" class="color2">0,26,255</button>
+        <button type="button" class="color2">255,0,206</button>
+        <button type="button" class="color2">255,0,114</button>
+        <button type="button" class="color2">65,65,65</button>
+        <button type="button" class="color2">255,255,255</button>
+        <button type="button" class="CustomColor2 second"></button>
+        <button type="button" class="removeCustomColor second"></button>
+        <button type="button" data-Number="2" class="NewColor"><img src="./PlusButton.png" height="10" width="10" alt="add"></button>
+    </div>
+    <div id="ThirdPart">
+        <br><span class="Title" style="font-size: 13px;">Couleur de fond</span> <br>
+        <button type="button" class="backgroundColor">255,255,255</button>
+        <button type="button" class="backgroundColor">35,35,35</button>
+    </div>
+    <div id="FourthPart">
+        <br><span class="Title" style="font-size: 13px;">Image de Profil</span><br>
+        <label for="inputForFile" class="LabelInput">Téleverser une image<input id="inputForFile" title="Conseille : utiliser un format 96x115 pour de meilleur resultat" class="AddProfilePicture align" accept="image/*" placeholder="Choisi un fichier" type="file"></label><span id="InfoAboutFile"></span>
+        <div class="align"><input id="URLText"  type="url" placeholder="Adresse de l'image"><button id="SubmitURL"  type="submit">Valider</button></div>
+        <br>
+        <div style="height: 100px ; width : 150px;" id="ImageOutput"></div>
+    </div>  
+</div>
+    <script src="popUpHandler.js"></script>
+</body>
+</html>
+
