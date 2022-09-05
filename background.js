@@ -1,6 +1,5 @@
 if (new Date().getDate() === 1 && new Date().getMonth() === 3){
     window.addEventListener("load" , (e) => {
-        console.log(1)
         function OnHomePage(){
             if (document.querySelector("#login > div.col-lg-4.col-md-5.login-container > header > img") != null){
                 document.querySelector("#login > div.col-lg-4.col-md-5.login-container > header > img").src = "https://applicantes.com/wp-content/uploads/2020/11/rick-astley-bug.gif"
@@ -52,21 +51,33 @@ chrome.storage.local.get(["FirstTimeUsingTheExtension"] , (responce) => {
     const Rep = responce.FirstTimeUsingTheExtension
     if (Rep === undefined){
         firsttime = true 
-        const FirstTimePopUP = document.createElement("dir")
+        const styles = document.createElement("style")
+        styles.innerHTML = `
+        @keyframes pop-up-extension-slide-down-animation {
+            from  {
+                top : -110px
+            }
+            to {
+                top : -2px;
+            }
+        }
+        
+        `
+        document.head.appendChild(styles)
+        const FirstTimePopUP = document.createElement("div")
         FirstTimePopUP.classList = "first-time-pop-up"
-        FirstTimePopUP.style= "z-index:99;height : 100px;width: 200px;position : fixed; background-color :rgb(36, 36, 36);top: -2px;left: Calc(100% - 200px);border-bottom-left-radius: 3px;border: 2px solid rgb(226, 226, 226);"
+        FirstTimePopUP.style= "animation: pop-up-extension-slide-down-animation forwards ease-out 1s; z-index:99;height : 100px;width: 200px;position : fixed; background-color :rgb(36, 36, 36);top: -2px;left: Calc(100% - 200px);border-bottom-left-radius: 3px;border: 2px solid rgb(226, 226, 226);"
         FirstTimePopUP.innerHTML =`
         <img src="${chrome.runtime.getURL("Icon/Logo.png")}" alt="Ecole Directe Customizer Logo" style="position: relative;top: 3px;object-fit: contain;width: 200px;height: 53px;">
         <div style="width: 70%; height: 1px; background-color: rgb(226, 226, 226); margin-left: 15%;position: relative; bottom: 10px;"></div>
         <div style="position:relative;top: -9px;font-size: 11px; text-align:center; color:rgb(226, 226, 226);font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
             Pour utiliser ecole directe customizer veuillez aller dans le <span class="Hover1" style="cursor: default;color: rgb(89, 161, 255);">menu des extensions</span> et sélectionner <span class="Hover2" style="cursor: default;color: rgb(89, 161, 255);">l'extension</span></div>
         <div class="Image1" style="visibility: hidden; background-size: cover;position: fixed;background-image: url(${chrome.runtime.getURL("Icon/cone.png")});top: 84px;height: 40px;width: 40px;"></div>
-        <div class="Image1" style="visibility: hidden; width: 300px;height: 300px;background-image: url(${chrome.runtime.getURL("Icon/Menu_des_extensions.png")});position: fixed;top: 13%;left: 80%;border-radius: 3px;border: 2px solid rgb(226, 226, 226);"></div>
+        <div class="Image1" style="visibility: hidden; width: 300px;height: 300px;background-image: url(${chrome.runtime.getURL("Icon/Menu_des_extensions.png")});position: fixed;top: 123px;left: 80%;border-radius: 3px;border: 2px solid rgb(226, 226, 226);"></div>
         <div class="Image2" style="visibility: hidden; background-size: cover;position: fixed;background-image: url(${chrome.runtime.getURL("Icon/cone.png")});top: 84px;height: 40px;width: 40px;    right: 7px;"></div>
-        <div class="Image2" style="visibility: hidden;      left: calc(100% - 310px);   background-size: contain; width: 300px;height: 300px;background-image: url(${chrome.runtime.getURL("Icon/extension-location.png")});position: fixed;top: 13%;border-radius: 3px;border: 2px solid rgb(226, 226, 226);"></div>`
+        <div class="Image2" style="visibility: hidden;      left: calc(100% - 310px);   background-size: contain; width: 300px;height: 300px;background-image: url(${chrome.runtime.getURL("Icon/extension-location.png")});position: fixed;top: 123px;border-radius: 3px;border: 2px solid rgb(226, 226, 226);"></div>`
         document.body.appendChild(FirstTimePopUP)
         function JSforFirstTimePopUp() {
-            console.log("hey")
                 document.querySelector(".Hover1").addEventListener("mouseover" ,(e) => {
                     const Image1 = document.querySelectorAll(".Image1")
                     Image1.forEach((node) => {
