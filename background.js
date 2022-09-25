@@ -55,29 +55,59 @@ chrome.storage.local.get(["FirstTimeUsingTheExtension"] , (responce) => {
         styles.innerHTML = `
         @keyframes pop-up-extension-slide-down-animation {
             from  {
-                top : -110px
+                translate : 0px 0px;
             }
             to {
-                top : -2px;
+                translate : 0px 110px;
             }
         }
-        
+        @keyframes pop-up-extension-slide-right-animation {
+            from  {
+                translate : 0px 110px;
+            }
+            to {
+                translate : 200px 110px;
+            }
+        }
+
+        @keyframes pop-up-extension-slide-left-animation {
+            from  {
+                translate : 200px 110px;
+            }
+            to {
+                translate : 0px 110px;
+            }
+        }
+
+
         `
         document.head.appendChild(styles)
         const FirstTimePopUP = document.createElement("div")
         FirstTimePopUP.classList = "first-time-pop-up"
-        FirstTimePopUP.style= "animation: pop-up-extension-slide-down-animation forwards ease-out 1s; z-index:99;height : 100px;width: 200px;position : fixed; background-color :rgb(36, 36, 36);top: -2px;left: Calc(100% - 200px);border-bottom-left-radius: 3px;border: 2px solid rgb(226, 226, 226);"
+        FirstTimePopUP.style= "animation: pop-up-extension-slide-down-animation forwards ease-out 1.5s; z-index:98;height : 100px;width: 200px;position : fixed; background-color :rgb(36, 36, 36);top: -110px;right: 0px;left: Calc(100% - 200px);border-bottom-left-radius: 3px;border: 2px solid rgb(226, 226, 226);"
         FirstTimePopUP.innerHTML =`
-        <img src="${chrome.runtime.getURL("Icon/Logo.png")}" alt="Ecole Directe Customizer Logo" style="position: relative;top: 3px;object-fit: contain;width: 200px;height: 53px;">
-        <div style="width: 70%; height: 1px; background-color: rgb(226, 226, 226); margin-left: 15%;position: relative; bottom: 10px;"></div>
-        <div style="position:relative;top: -9px;font-size: 11px; text-align:center; color:rgb(226, 226, 226);font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+        <img class="retract" src="${chrome.runtime.getURL("Icon/cone.png")}" alt="retract pop up" style="cursor : pointer;translate: -25px 38px; object-fit: contain;width: 25px; height: 25px; transform: rotate(-90deg);" />
+        <img src="${chrome.runtime.getURL("Icon/Logo.png")}" alt="Ecole Directe Customizer Logo" style="translate : 0px -19px;object-fit: contain;width: 200px;height: 53px;">
+        <div style="translate : 0px -24px; width: 70%; height: 1px; background-color: rgb(226, 226, 226); margin-left: 15%;position: relative; bottom: 10px;"></div>
+        <div style="translate : 0px -21px; position:relative;top: -9px;font-size: 11px; text-align:center; color:rgb(226, 226, 226);font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
             Pour utiliser ecole directe customizer veuillez aller dans le <span class="Hover1" style="cursor: default;color: rgb(89, 161, 255);">menu des extensions</span> et sélectionner <span class="Hover2" style="cursor: default;color: rgb(89, 161, 255);">l'extension</span></div>
         <div class="Image1" style="visibility: hidden; background-size: cover;position: fixed;background-image: url(${chrome.runtime.getURL("Icon/cone.png")});top: 84px;height: 40px;width: 40px;"></div>
-        <div class="Image1" style="visibility: hidden; width: 300px;height: 300px;background-image: url(${chrome.runtime.getURL("Icon/Menu_des_extensions.png")});position: fixed;top: 123px;left: 80%;border-radius: 3px;border: 2px solid rgb(226, 226, 226);"></div>
+        <div class="Image1" style="visibility: hidden; width: 300px;height: 300px;background-image: url(${chrome.runtime.getURL("Icon/Menu_des_extensions.png")});position: fixed;top: 123px;right : 10%;border-radius: 3px;border: 2px solid rgb(226, 226, 226);"></div>
         <div class="Image2" style="visibility: hidden; background-size: cover;position: fixed;background-image: url(${chrome.runtime.getURL("Icon/cone.png")});top: 84px;height: 40px;width: 40px;    right: 7px;"></div>
         <div class="Image2" style="visibility: hidden;      left: calc(100% - 310px);   background-size: contain; width: 300px;height: 300px;background-image: url(${chrome.runtime.getURL("Icon/extension-location.png")});position: fixed;top: 123px;border-radius: 3px;border: 2px solid rgb(226, 226, 226);"></div>`
         document.body.appendChild(FirstTimePopUP)
         function JSforFirstTimePopUp() {
+                let isLeft = false
+                document.querySelector(".retract").addEventListener("click" ,(e) => {                    
+                    const popUp = document.querySelector(".first-time-pop-up")
+                    if (isLeft) { 
+                        popUp.style.animation = "pop-up-extension-slide-left-animation forwards cubic-bezier(0.03, -0.2, 0.39, 1.15) 1.5s"
+                    }
+                    if (!isLeft) { 
+                        popUp.style.animation = "pop-up-extension-slide-right-animation forwards cubic-bezier(0.03, -0.2, 0.39, 1.15)1.5s"
+                    }
+                    isLeft = !isLeft
+                })
                 document.querySelector(".Hover1").addEventListener("mouseover" ,(e) => {
                     const Image1 = document.querySelectorAll(".Image1")
                     Image1.forEach((node) => {
