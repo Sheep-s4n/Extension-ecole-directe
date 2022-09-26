@@ -9,7 +9,7 @@ chrome.storage.local.get(["FirstTimeUsingTheExtension"] , (responce) => {
         chrome.storage.sync.set({choosenColor1 : obj1})
         let obj2 = JSON.stringify({Active : true, Color : "#0f8fd1" , Equiped : true})
         chrome.storage.sync.set({choosenColor2 : obj2})
-        chrome.storage.local.set({Parameters : {BackgroundColorChecked: true, Color1Checked: true,Color2Checked: true ,ProfilePicture: true , Multicolor : false}})
+        chrome.storage.local.set({Parameters : {BackgroundColorChecked: true, Color1Checked: true,Color2Checked: true ,ProfilePicture: true , Multicolor : false , AutoLogIn : false}})
         chrome.storage.local.set({customImage : "https://th.bing.com/th/id/R.ea411ebf6153f5f3201aa5a134949f3e?rik=TMsZisGUrPRPSA&pid=ImgRaw&r=0"})
         chrome.storage.local.set({ImageProvenence : "Link"})
         chrome.storage.local.set({FirstTimeUsingTheExtension : "nope"})
@@ -840,7 +840,8 @@ if (responce.FirstTimeUsingTheExtension !== undefined){
             Color2Checked : "false",
             BackgroundColorChecked : "false",
             ProfilePicture : "false",
-            Multicolor : "false"
+            Multicolor : "false",
+            AutoLogIn : "false",
         }
             Inputs.forEach((Input) => {
                 let Value = Input.checked
@@ -864,6 +865,8 @@ if (responce.FirstTimeUsingTheExtension !== undefined){
                     document.querySelector("#FourthPart").style.display = Display
                 }else if (Input.getAttribute("id") === "MulticolorCheckBox"){
                     JSON.Multicolor = Value;
+                }else if (Input.getAttribute("id") === "auto-log-in"){
+                    JSON.AutoLogIn = Value;
                 }
             })
         chrome.storage.local.set({Parameters : JSON})
@@ -911,6 +914,8 @@ if (responce.FirstTimeUsingTheExtension !== undefined){
                 document.querySelector("#FourthPart").style.display = ReturnDisplay(DATA.ProfilePicture)
             }else if (Input.getAttribute("id") === "MulticolorCheckBox"){
                 Input.checked = DATA.Multicolor
+            }else if (Input.getAttribute("id") === "auto-log-in"){
+                Input.checked = DATA.AutoLogIn
             }
             
         })
@@ -968,3 +973,4 @@ if (responce.FirstTimeUsingTheExtension !== undefined){
 }})
 
 // coded by LeMouton_noob
+// me after looking at this code after 1 year -> this is trash 
