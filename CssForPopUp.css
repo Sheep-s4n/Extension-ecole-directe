@@ -82,7 +82,7 @@ Options actuelles :
 
 .PopUpUi {
     position: absolute;
-    left: 35px;
+   left: 0px;
     top: 32%;
     z-index: 3;
     border: 3px solid rgb(0, 0, 0);
@@ -90,6 +90,10 @@ Options actuelles :
     padding: 20px;
     background-color: white;
     visibility: hidden;
+}
+
+#ParamUI {
+    left: 35px;
 }
 
 .Transparent {

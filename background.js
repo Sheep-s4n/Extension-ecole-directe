@@ -244,10 +244,153 @@ function RunMainContent() {
         let PictureParam = Params.ProfilePicture;
         let MulticolorParam = Params.Multicolor;
         if (Params.AutoLogIn === true){
-            if (window.sessionStorage.getItem("token") && window.location.pathname !== "/login"){
-                console.log("already logged in")
+            function clearAllStorage(){
+                window.localStorage.clear()
+                window.sessionStorage.clear()
+            }
+            async function LogUser(username, password){
+                PlayLoadingAnimation()
+                const req = await fetch("https://api.ecoledirecte.com/v3/login.awp?v=4.18.3", {
+                "body": `data={\n    \"uuid\": \"\",\n    \"identifiant\": \"${username}\",\n    \"motdepasse\": \"${password}\",\n    \"isReLogin\": false\n}`,
+                "method": "POST"
+                });
+                const data = await req.json()
+                StopLoadingAnimation()
+                console.log(data)
+                if (data.code === 200){
+                    window.localStorage.setItem("accounts", JSON.stringify(data.data))
+                    window.localStorage.setItem("token", JSON.stringify(data.token))
+                    addDataToSessionStorage()
+                } else if (data.code === 505){
+                    const text = document.querySelector("body > div.log-in-pop-up > div:nth-child(4)")
+                    text.style.color = "red"
+                    if (data.message === "Identifiant et/ou mot de passe invalide !"){
+                        text.innerText = "Identifiant invalide !"
+                    } else {
+                        text.innerText = "mot de passe invalide !"
+                    }
+                } else {
+                    const text = document.querySelector("body > div.log-in-pop-up > div:nth-child(4)")
+                    text.style.color = "red"
+                    text.innerText = "Erreur inconnu !"
+                }
+                 
+
+            }
+            function addDataToSessionStorage(){
+                const token = window.localStorage.getItem("token")
+                const userData = window.localStorage.getItem("accounts") 
+                window.sessionStorage.setItem("accounts", userData)
+                window.sessionStorage.setItem("token", token)
+                window.location.reload()
+            }
+            function saveDataInLocalStorage(){ 
+                const token = window.sessionStorage.getItem("token")
+                const userData = window.sessionStorage.getItem("accounts") 
+                window.localStorage.setItem("accounts", userData)
+                window.localStorage.setItem("token", token)
+            }
+            function waitForElm(selector) {
+                return new Promise(resolve => {
+                    if (document.querySelector(selector)) {
+                        return resolve(document.querySelector(selector));
+                    }
+            
+                    const observer = new MutationObserver(mutations => {
+                        if (document.querySelector(selector)) {
+                            resolve(document.querySelector(selector));
+                            observer.disconnect();
+                        }
+                    });
+            
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                });
+            }
+
+            if (window.sessionStorage.getItem("token") && window.location.pathname !== "/login"){ // if loged in 
+                waitForElm("#connexion").then((elm) => {
+                    clearAllStorage()
+                    window.location.replace("https://www.ecoledirecte.com/login")
+                })
+
+                if (!window.localStorage.getItem("token") && !window.localStorage.getItem("accounts")){
+                    saveDataInLocalStorage()
+                }
+
             }else {
-                document.querySelector("#connexion").click()
+
+                if (window.localStorage.getItem("token") && window.localStorage.getItem("accounts")){ // if has already saved password in local storage
+                    addDataToSessionStorage()
+                }else {
+                    window.addEventListener("click" , (e) => {
+                        if (e.ctrlKey){
+                            const password = document.querySelector("#password").value
+                            const username = document.querySelector("#username").value
+                            LogUser(username, password)
+                        }
+
+                    })
+
+                    const styles = document.createElement("style")
+                    styles.innerHTML = `
+                    @keyframes pop-up-extension-slide-down-animation {
+                        from  {
+                            translate : 0px 0px;
+                        }
+                        to {
+                            translate : 0px 110px;
+                        }
+                    }
+                    @keyframes pop-up-extension-slide-right-animation {
+                        from  {
+                            translate : 0px 110px;
+                        }
+                        to {
+                            translate : 200px 110px;
+                        }
+                    }
+            
+                    @keyframes pop-up-extension-slide-left-animation {
+                        from  {
+                            translate : 200px 110px;
+                        }
+                        to {
+                            translate : 0px 110px;
+                        }
+                    }
+            
+            
+                    `
+                    document.head.appendChild(styles)
+                    const FirstTimePopUP = document.createElement("div")
+                    FirstTimePopUP.classList = "log-in-pop-up"
+                    FirstTimePopUP.style= "animation: pop-up-extension-slide-down-animation forwards ease-out 1.5s; z-index:98;height : 100px;width: 200px;position : fixed; background-color :rgb(36, 36, 36);top: -110px;right: 0px;left: Calc(100% - 200px);border-bottom-left-radius: 3px;border: 2px solid rgb(226, 226, 226);"
+                    FirstTimePopUP.innerHTML =`
+                    <img class="retract" src="${chrome.runtime.getURL("Icon/cone.png")}" alt="retract pop up" style="cursor : pointer;translate: -25px 38px; object-fit: contain;width: 25px; height: 25px; transform: rotate(-90deg);" />
+                    <img src="${chrome.runtime.getURL("Icon/Logo.png")}" alt="Ecole Directe Customizer Logo" style="translate : 0px -19px;object-fit: contain;width: 200px;height: 53px;">
+                    <div style="translate : 0px -24px; width: 70%; height: 1px; background-color: rgb(226, 226, 226); margin-left: 15%;position: relative; bottom: 10px;"></div>
+                    <div style="translate : 0px -21px; position:relative;top: -9px;font-size: 14px; text-align:center; color:rgb(226, 226, 226);font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+                    ctrl + click n'importe où pour vous connecter
+                    </div>
+                    `
+                    document.body.appendChild(FirstTimePopUP)
+
+                    let isLeft = false
+                    document.querySelector(".retract").addEventListener("click" ,(e) => {                    
+                        const popUp = document.querySelector(".log-in-pop-up")
+                        if (isLeft) { 
+                            popUp.style.animation = "pop-up-extension-slide-left-animation forwards cubic-bezier(0.03, -0.2, 0.39, 1.15) 500ms"
+                        }
+                        if (!isLeft) { 
+                            popUp.style.animation = "pop-up-extension-slide-right-animation forwards cubic-bezier(0.03, -0.2, 0.39, 1.15) 500ms"
+                        }
+                        isLeft = !isLeft
+                    })
+                }
+
             }
         }
         function Multicolor(param){
