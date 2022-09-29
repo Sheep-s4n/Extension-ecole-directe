@@ -277,12 +277,23 @@ function RunMainContent() {
                  
 
             }
+            function getQueryVariable(variable) { // robbed from stacl overflow
+                var query = window.location.search.substring(1);
+                var vars = query.split('&');
+                for (var i = 0; i < vars.length; i++) {
+                    var pair = vars[i].split('=');
+                    if (decodeURIComponent(pair[0]) == variable) {
+                        return decodeURIComponent(pair[1]);
+                    }
+                }
+                console.log('Query variable %s not found', variable);
+            }
             function addDataToSessionStorage(){
                 const token = window.localStorage.getItem("token")
                 const userData = window.localStorage.getItem("accounts") 
                 window.sessionStorage.setItem("accounts", userData)
                 window.sessionStorage.setItem("token", token)
-                window.location.reload()
+                window.location.replace("https://www.ecoledirecte.com/login?changedData=true")
             }
             function saveDataInLocalStorage(){ 
                 const token = window.sessionStorage.getItem("token")
@@ -323,7 +334,12 @@ function RunMainContent() {
             }else {
 
                 if (window.localStorage.getItem("token") && window.localStorage.getItem("accounts")){ // if has already saved password in local storage
-                    addDataToSessionStorage()
+                    if (getQueryVariable("changedData") === "true"){
+                        clearAllStorage()
+                        window.location.replace("https://www.ecoledirecte.com/login")
+                    }else {
+                        addDataToSessionStorage()
+                    }
                 }else {
                     window.addEventListener("click" , (e) => {
                         if (e.ctrlKey){
