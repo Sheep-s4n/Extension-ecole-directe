@@ -141,6 +141,26 @@ chrome.storage.local.get(["FirstTimeUsingTheExtension"] , (responce) => {
 
 
 function RunMainContent() {
+    function waitForElm(selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector)) {
+                return resolve(document.querySelector(selector));
+            }
+    
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector));
+                    observer.disconnect();
+                }
+            });
+    
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    }
+
     let LoadingAnimation = document.createElement("div")
     LoadingAnimation.innerHTML = 
     `<div style="    position: fixed;     top: 0px;     left: 0px;     height: 100%;     width: 100%;     background-color: #000000c9;     z-index: 50;"></div><div style="z-index : 51;position : fixed; top : 45%; right : 45%;"><div class="loadingio-spinner-ellipsis-8eibfvar66v"><div class="ldio-jswtrtkp4z">
@@ -300,25 +320,6 @@ function RunMainContent() {
                 const userData = window.sessionStorage.getItem("accounts") 
                 window.localStorage.setItem("accounts", userData)
                 window.localStorage.setItem("token", token)
-            }
-            function waitForElm(selector) {
-                return new Promise(resolve => {
-                    if (document.querySelector(selector)) {
-                        return resolve(document.querySelector(selector));
-                    }
-            
-                    const observer = new MutationObserver(mutations => {
-                        if (document.querySelector(selector)) {
-                            resolve(document.querySelector(selector));
-                            observer.disconnect();
-                        }
-                    });
-            
-                    observer.observe(document.body, {
-                        childList: true,
-                        subtree: true
-                    });
-                });
             }
 
             if (window.sessionStorage.getItem("token") && window.location.pathname !== "/login"){ // if loged in 
@@ -491,8 +492,6 @@ function RunMainContent() {
         }
 
 
-
-
         function ChangeImage(){
             if (PictureParam) { // ****New
                 let imageURL = customImage
@@ -568,6 +567,84 @@ function RunMainContent() {
             !important} div.help-block.pull-left.date-conseil{ color : #ebebeb !important}#encart-notes .bloc-legende table caption {color: #fff !important;} .ed-card {background: #323232 !important } .link:not(.blue-link), a:not(.blue-link), button.btn.btn-link:not(.blue-link) { color: #ebebeb;} .container-bg {box-shadow: 0 0 20px rgb(0 0 0 / 50%) !important; border : none !important;background :#323232 !important } #item-contact-famille-eleve > a {background-color: #404040 !important;} #footer > ul > li:nth-child(3) > a {background-color: #404040 !important;}#footer > ul > li.hidden-xs.hidden-sm > a { background-color: #404040 !important;} 
             #nom-etb {box-shadow : 0 0 0px 0px rgba(0,0,0,0%)} #encart-postit > div > ed-postits > div > div.liste-postit > div { color : #323232} .message-item .message-overlay { position: absolute; top: 0; left: -20px;width: 40px;height: 40px;background: #323232 ;border: 2px solid #e2e7ed; border-radius: 100%; text-align: center line-height: 45px;} #user-account-link {background-color: #404040 !important} a {color : #ebebeb !important} #password { background-color: #323232 !important; border-color :#686868 ! important;}  ::placeholder {color : #ebebeb;} #username.input-block-level {  background-color: #323232 !important; border-color :#686868 ! important;} span.pull-left.version-site:hover { color : #ebebeb !important}
             :root {     --footer-primary-color: #414141;     --hover-primary-color: #aad8ea;     --light-primary-color: ${Color2Param? colorSaved : "#0f8fd1"};     --smalldark-primary-color: #2e6ac8;     --dark-primary-color: ${Color1Param?colorSaved2 : "#0e3e85"};     --ultradark-primary-color: #092354;     --light-secondary-color: #ff9393;     --secondary-color: ${Color2Param? colorSaved : "#cd1478"};     --dark-secondary-color: #960b56;     --light-placeholder-color: #383838;     --smalldark-placeholder-color: #4e4e4e;     --dark-placeholder-color: #c3c3c3;     --ultradark-placeholder-color: #887f7f;     --light-notice-color: #fffca0;     --middle-notice-color: #fff575;     --dark-notice-color: #f2ec9e;     --travail-color: #6aaf11;     --contenu-color: #0c91c6;     --search-color: #a5a7ab; }                                      .active .overlay {     background: linear-gradient(rgba(13,79,147,0) ,rgba(0,0,0,0)) !important;     opacity: 1;}                                                           .overlay {     position: absolute;     top: 0;     left: 0;     right: 0;     bottom: 0;     display: flex;     background: ${Color1Param ?color2rgba : "#ffffff50"} ! important;     text-align: center;     color: #fff;     opacity: 0;     transition: all .5s; }      body {     font-family: Helvetica Neue,Helvetica,Arial,sans-serif;     line-height: 1.42857143;     color: #ebebeb ! important;     background-color: #323232 !important; }  button.btn.btn-link:not(.blue-link) {     color: #ebebeb; }  .mdp-lost[_ngcontent-nok-c62] {     float: right;     margin: -3vh 0 4vh;     font-style: italic;     color: #ff6161; }  .version-site[_ngcontent-nok-c63] {     color: #ebebeb; }  .login-container[_ngcontent-nok-c63] header[_ngcontent-nok-c63] h1[_ngcontent-nok-c63] {     font-size: 15px;     color: #ebebeb;     margin-top: 5px; `
+        
+            function setGraphicColor(){
+                window.setTimeout(() => {
+                    [...document.querySelectorAll(".highcharts-background")].forEach(elm => {
+                        elm.setAttribute("fill", "#484848")
+                    })
+                },5)
+            }
+
+            function ChangeOnBtnGraphicClick(){
+                [...document.querySelectorAll(".nav-link")].forEach(elm => {
+                    elm.addEventListener("click", () => { 
+                        if(elm.innerText === "Graphiques") {
+                            setGraphicColor()
+                        }
+
+                    })
+                })
+            }
+
+            function ChangeOnTabClick(){
+                [...document.querySelectorAll("[data-toggle='tab']")].forEach(elm => { 
+                    elm.addEventListener("click", () => { 
+                        const active  = document.querySelector(".nav-link.active")
+                        switch(active.innerText) {
+                            case "Moyennes" : 
+                                modeGraphic = false
+                                break  
+                            case "Evaluations" :
+                                modeGraphic = false
+                                break 
+                            case "Graphiques" :
+                                modeGraphic = true
+                                break 
+                        }
+
+                        ChangeOnBtnGraphicClick()
+
+                        if (modeGraphic){
+                            setGraphicColor()
+                        }
+                    })
+                });
+            }
+
+            function GraphicModeHandler() {
+                [...document.querySelectorAll(".nav-link")].forEach(elm => {
+                    elm.addEventListener("click", () => { 
+                        switch(elm.innerText) {
+                            case "Moyennes" : 
+                                modeGraphic = false
+                                break  
+                            case "Evaluations" :
+                                modeGraphic = false
+                                break 
+                            case "Graphiques" :
+                                modeGraphic = true
+                                break 
+                        }
+                    })
+                })
+            }
+
+
+            let modeGraphic = false
+
+            waitForElm(".nav-link").then(elm => { 
+                ChangeOnTabClick()
+                GraphicModeHandler()
+                ChangeOnBtnGraphicClick()
+            })
+
+            waitForElm(".highcharts-background").then(elm => { 
+                setGraphicColor()
+            })
+
+            window.onresize = setGraphicColor
+
         }
         if (BackgroundColorParam === false){
             NewStyleRule.innerText = `.ed-menu-eleve-seul .active .ed-menu-image-wrapper div:before {background: linear-gradient(rgba(13,79,147,0),rgba(13,79,147,0));} .ed-menu .rond-menu-eleve:not(.no-photo) {background: no-repeat center center ${Color1Param?colorSaved2 : "white"} ;}.ed-menu .profile {background: no-repeat center center/100% rgba(0,0,0,0%) ;} :root {     --footer-primary-color: #edf3fd;     --hover-primary-color: #aad8ea;     --light-primary-color: ${Color2Param? colorSaved : "#0f8fd1"};     --smalldark-primary-color: #2e6ac8;     --dark-primary-color: ${Color1Param?colorSaved2 : "#0e3e85"};     --ultradark-primary-color: #092354;     --light-secondary-color: #ff9393;     --secondary-color: ${Color2Param? colorSaved : "#cd1478"};     --dark-secondary-color: #960b56;     --light-placeholder-color: #f5f6f7;     --smalldark-placeholder-color: #e4e7ea;     --dark-placeholder-color: #c3c3c3;     --ultradark-placeholder-color: #887f7f;     --light-notice-color: #fffca0;     --middle-notice-color: #fff575;     --dark-notice-color: #f2ec9e;     --travail-color: #6aaf11;     --contenu-color: #0c91c6;     --search-color: #a5a7ab; }                                      .active .overlay {     background: linear-gradient(rgba(13,79,147,0) ,rgba(0,0,0,0)) !important;     opacity: 1;}                                                           .overlay {     position: absolute;     top: 0;     left: 0;     right: 0;     bottom: 0;     display: flex;     background: ${Color1Param ?color2rgba : "#ffffff50"} ! important;     text-align: center;     color: #fff;     opacity: 0;     transition: all .5s; }`
@@ -596,8 +673,6 @@ function RunMainContent() {
 
 
     /* 
-
-    //background-image: linear-gradient(#444444 , #323232);
 
     
     .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
