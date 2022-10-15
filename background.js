@@ -493,7 +493,7 @@ function RunMainContent() {
 
 
         function ChangeImage(){
-            if (PictureParam) { // ****New
+            if (PictureParam) { 
                 let imageURL = customImage
                         if (document.querySelector("div.circular.text-center.rond-menu-eleve") !== null && typeof document.querySelector("div.circular.text-center.rond-menu-eleve") !== "undefined"){
                             let images = document.querySelectorAll("div.circular.text-center.rond-menu-eleve")
@@ -568,15 +568,31 @@ function RunMainContent() {
             #nom-etb {box-shadow : 0 0 0px 0px rgba(0,0,0,0%)} #encart-postit > div > ed-postits > div > div.liste-postit > div { color : #323232} .message-item .message-overlay { position: absolute; top: 0; left: -20px;width: 40px;height: 40px;background: #323232 ;border: 2px solid #e2e7ed; border-radius: 100%; text-align: center line-height: 45px;} #user-account-link {background-color: #404040 !important} a {color : #ebebeb !important} #password { background-color: #323232 !important; border-color :#686868 ! important;}  ::placeholder {color : #ebebeb;} #username.input-block-level {  background-color: #323232 !important; border-color :#686868 ! important;} span.pull-left.version-site:hover { color : #ebebeb !important}
             :root {     --footer-primary-color: #414141;     --hover-primary-color: #aad8ea;     --light-primary-color: ${Color2Param? colorSaved : "#0f8fd1"};     --smalldark-primary-color: #2e6ac8;     --dark-primary-color: ${Color1Param?colorSaved2 : "#0e3e85"};     --ultradark-primary-color: #092354;     --light-secondary-color: #ff9393;     --secondary-color: ${Color2Param? colorSaved : "#cd1478"};     --dark-secondary-color: #960b56;     --light-placeholder-color: #383838;     --smalldark-placeholder-color: #4e4e4e;     --dark-placeholder-color: #c3c3c3;     --ultradark-placeholder-color: #887f7f;     --light-notice-color: #fffca0;     --middle-notice-color: #fff575;     --dark-notice-color: #f2ec9e;     --travail-color: #6aaf11;     --contenu-color: #0c91c6;     --search-color: #a5a7ab; }                                      .active .overlay {     background: linear-gradient(rgba(13,79,147,0) ,rgba(0,0,0,0)) !important;     opacity: 1;}                                                           .overlay {     position: absolute;     top: 0;     left: 0;     right: 0;     bottom: 0;     display: flex;     background: ${Color1Param ?color2rgba : "#ffffff50"} ! important;     text-align: center;     color: #fff;     opacity: 0;     transition: all .5s; }      body {     font-family: Helvetica Neue,Helvetica,Arial,sans-serif;     line-height: 1.42857143;     color: #ebebeb ! important;     background-color: #323232 !important; }  button.btn.btn-link:not(.blue-link) {     color: #ebebeb; }  .mdp-lost[_ngcontent-nok-c62] {     float: right;     margin: -3vh 0 4vh;     font-style: italic;     color: #ff6161; }  .version-site[_ngcontent-nok-c63] {     color: #ebebeb; }  .login-container[_ngcontent-nok-c63] header[_ngcontent-nok-c63] h1[_ngcontent-nok-c63] {     font-size: 15px;     color: #ebebeb;     margin-top: 5px; `
         
+            let modeGraphic = false
+            
+            function addEventListenerForSubjectGraphic(){
+                [...document.querySelectorAll(".fa.fa-bar-chart.fa-2x")].forEach(elm => {
+                    elm.addEventListener("click", () => { 
+                        setGraphicColor()
+                    })
+                }); 
+            }
+
             function setGraphicColor(){
                 window.setTimeout(() => {
                     [...document.querySelectorAll(".highcharts-background")].forEach(elm => {
                         elm.setAttribute("fill", "#484848")
+                    });
+                    [...document.querySelectorAll("text")].forEach(elm => {
+                        if (elm.x.animVal[0].valueAsString !== "21"){
+                            elm.style.fill = "#ebebeb"
+                        }
                     })
                 },5)
             }
 
             function ChangeOnBtnGraphicClick(){
+                addEventListenerForSubjectGraphic();
                 [...document.querySelectorAll(".nav-link")].forEach(elm => {
                     elm.addEventListener("click", () => { 
                         if(elm.innerText === "Graphiques") {
@@ -590,6 +606,8 @@ function RunMainContent() {
             function ChangeOnTabClick(){
                 [...document.querySelectorAll("[data-toggle='tab']")].forEach(elm => { 
                     elm.addEventListener("click", () => { 
+                        // calcul de moyenne
+                        addEventListenerForSubjectGraphic();
                         const active  = document.querySelector(".nav-link.active")
                         switch(active.innerText) {
                             case "Moyennes" : 
@@ -615,6 +633,7 @@ function RunMainContent() {
             function GraphicModeHandler() {
                 [...document.querySelectorAll(".nav-link")].forEach(elm => {
                     elm.addEventListener("click", () => { 
+                        addEventListenerForSubjectGraphic();
                         switch(elm.innerText) {
                             case "Moyennes" : 
                                 modeGraphic = false
@@ -631,13 +650,22 @@ function RunMainContent() {
             }
 
 
-            let modeGraphic = false
 
-            waitForElm(".nav-link").then(elm => { 
+            function graphicMain(){
                 ChangeOnTabClick()
                 GraphicModeHandler()
                 ChangeOnBtnGraphicClick()
+            }
+
+            waitForElm(".item-actif").then(elm => {
+                elm.addEventListener("click", () => {
+                    graphicMain()
+                })
             })
+            waitForElm(".nav-link").then(elm => { 
+                graphicMain()
+            })
+            
 
             waitForElm(".highcharts-background").then(elm => { 
                 setGraphicColor()
