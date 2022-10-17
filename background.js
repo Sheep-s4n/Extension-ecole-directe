@@ -603,10 +603,35 @@ function RunMainContent() {
                 })
             }
 
+            async function averageCalculation(){
+                const token = JSON.parse(window.sessionStorage.getItem("token"))
+                const pupilId = JSON.parse(window.sessionStorage.getItem("accounts")).accounts[0].id
+
+                if (token != null && pupilId){
+                    const request = {
+                        "headers": {
+                            "x-token": token
+                        },
+                        "body": "data={\n    \"anneeScolaire\": \"\"\n}",
+                        method: "POST",
+                    }
+                    const req = await fetch(`https://api.ecoledirecte.com/v3/eleves/${pupilId}/notes.awp?verbe=get&v=4.21.0`, request)
+                    const data = await req.json()
+                    const moyennePeriod1 = data.data.periodes["0"].ensembleMatieres.disciplines 
+                    console.log(moyennePeriod1)
+                } else {
+                    window.location.reload()
+                }
+
+            }
+
             function ChangeOnTabClick(){
                 [...document.querySelectorAll("[data-toggle='tab']")].forEach(elm => { 
                     elm.addEventListener("click", () => { 
+                        
                         // calcul de moyenne
+                        averageCalculation()
+
                         addEventListenerForSubjectGraphic();
                         const active  = document.querySelector(".nav-link.active")
                         switch(active.innerText) {
