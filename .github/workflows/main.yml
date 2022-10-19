@@ -1,9 +1,8 @@
 name: Add commit to the commit file
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: Print When Push
 on: [push]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "processing..."
-      - run: ls /home/runner/work
+      - run: echo "${{ github.actor }} has made a push to the repo !"
