@@ -6,4 +6,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "processing..."
-      - run: rmdir cool
+      - run: ls /home/runner/work
