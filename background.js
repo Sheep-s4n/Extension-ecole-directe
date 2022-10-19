@@ -140,7 +140,15 @@ chrome.storage.local.get(["FirstTimeUsingTheExtension"] , (responce) => {
 })
 
 
+
 function RunMainContent() {
+
+    function onPathInclude(path , callback) { 
+        if (window.location.pathname.includes(path)) {
+            callback()
+        }
+    }
+
     function waitForElm(selector) {
         return new Promise(resolve => {
             if (document.querySelector(selector)) {
@@ -559,7 +567,8 @@ function RunMainContent() {
         if (colorSaved3 !== "rgb(35, 35, 35)"){
             NewStyleRule.innerText = `.ed-menu-eleve-seul .active .ed-menu-image-wrapper div:before {background: linear-gradient(rgba(13,79,147,0),rgba(13,79,147,0));} .ed-menu .rond-menu-eleve:not(.no-photo) {background: no-repeat center center ${Color1Param?colorSaved2 : "white"} ;}.ed-menu .profile {background: no-repeat center center/100% rgba(0,0,0,0%) ;} :root {     --footer-primary-color: #edf3fd;     --hover-primary-color: #aad8ea;     --light-primary-color: ${Color2Param? colorSaved : "#0f8fd1"};     --smalldark-primary-color: #2e6ac8;     --dark-primary-color: ${Color1Param?colorSaved2 : "#0e3e85"};     --ultradark-primary-color: #092354;     --light-secondary-color: #ff9393;     --secondary-color: ${Color2Param? colorSaved : "#cd1478"};     --dark-secondary-color: #960b56;     --light-placeholder-color: #f5f6f7;     --smalldark-placeholder-color: #e4e7ea;     --dark-placeholder-color: #c3c3c3;     --ultradark-placeholder-color: #887f7f;     --light-notice-color: #fffca0;     --middle-notice-color: #fff575;     --dark-notice-color: #f2ec9e;     --travail-color: #6aaf11;     --contenu-color: #0c91c6;     --search-color: #a5a7ab; }                                      .active .overlay {     background: linear-gradient(rgba(13,79,147,0) ,rgba(0,0,0,0)) !important;     opacity: 1;}                                                           .overlay {     position: absolute;     top: 0;     left: 0;     right: 0;     bottom: 0;     display: flex;     background: ${Color1Param ?color2rgba : "#ffffff50"} ! important;     text-align: center;     color: #fff;     opacity: 0;     transition: all .5s; }`
         }else {
-            NewStyleRule.innerText = `.dhx_cal_weekNumber { color : var(--light-primary-color) }  .nav-tabs-container-bg.tab-container>ul>li>a:hover, .nav-tabs-container-bg>li>a:hover { border: none;} .table>tbody>tr:hover>td:not(.screen-reader) {background: #00000000;} .nav-pills>li.active>a {background-color : #5a5a5a !important;} #documentProperties  ,  #spreadEven  , #spreadOdd  , #spreadNone ,   #scrollWrapped , #scrollPage , #scrollVertical , #scrollHorizontal {color : #ebebeb !important} svg > path {color : #ebebeb !important;} ngx-extended-pdf-viewer .toolbar {border-bottom: 1px solid #626262 !important;} ngx-extended-pdf-viewer #toolbarContainer, ngx-extended-pdf-viewer .findbar, ngx-extended-pdf-viewer .secondaryToolbar {    background-color: #2c2c2c !important;} #viewer {    background: #2c2c2c;} .cke_combo_on a.cke_combo_button, .cke_combo_off a.cke_combo_button:hover, .cke_combo_off a.cke_combo_button:focus, .cke_combo_off a.cke_combo_button:active {color: #ebebeb !important;background: #212121 !important;border: none !important;border-radius: 3px; } a.cke_dialog_ui_button_cancel:hover {background: #9d0000 !important;} .cke_dialog_ui_button_cancel 
+            // black mode
+            NewStyleRule.innerText = `div.dhx_multi_day_icon_small {background-color : #414141 ; border-right-color: #323232} .dhx_multi_day { border-top: 1px solid #323232; background-color: #414141;} span[accordion-heading] {color : #ebebeb } .dhx_cal_weekNumber { color : var(--light-primary-color) }  .nav-tabs-container-bg.tab-container>ul>li>a:hover, .nav-tabs-container-bg>li>a:hover { border: none;} .table>tbody>tr:hover>td:not(.screen-reader) {background: #00000000;} .nav-pills>li.active>a {background-color : #5a5a5a !important;} #documentProperties  ,  #spreadEven  , #spreadOdd  , #spreadNone ,   #scrollWrapped , #scrollPage , #scrollVertical , #scrollHorizontal {color : #ebebeb !important} svg > path {color : #ebebeb !important;} ngx-extended-pdf-viewer .toolbar {border-bottom: 1px solid #626262 !important;} ngx-extended-pdf-viewer #toolbarContainer, ngx-extended-pdf-viewer .findbar, ngx-extended-pdf-viewer .secondaryToolbar {    background-color: #2c2c2c !important;} #viewer {    background: #2c2c2c;} .cke_combo_on a.cke_combo_button, .cke_combo_off a.cke_combo_button:hover, .cke_combo_off a.cke_combo_button:focus, .cke_combo_off a.cke_combo_button:active {color: #ebebeb !important;background: #212121 !important;border: none !important;border-radius: 3px; } a.cke_dialog_ui_button_cancel:hover {background: #9d0000 !important;} .cke_dialog_ui_button_cancel 
             { background: #c70000 !important;   border: 0px solid #bcbcbc !important; height : 28px !important; } select.cke_dialog_ui_input_select {   background-color: #323232 !important; } #login > div.col-lg-4.col-md-5.login-container > header > h1 {color : #ebebeb} .cke_reset_all, .cke_reset_all *, .cke_reset_all a, .cke_reset_all textarea { color: #ebebeb !important; } a.cke_dialog_tab_selected ,  a.cke_dialog_tab {   background: #323232!important;}.cke_dialog_contents_body , .cke_dialog_footer , .cke_dialog_body { background: #414141 !important; color : #ebebeb !important }.cke_dialog_title { background: #323232 !important; color : #ebebeb!important} a.cke_button_off:hover, a.cke_button_off:focus, a.cke_button_off:active  {background: #252525 !important;border-radius: 3px !important;border: none !important;} a.cke_button_on {background: #212121 !important ;border-radius: 3px !important ;border: none !important;padding: 3px 5px;}.text-enseignant {color: #ffffff;}.dropdown-menu>li>a {color: #ebebeb; background: #414141;}.text-danger {color : rgb(221,0,0) } #dropdown2 {background: #414141;} #dropdown-annees { color: #ebebeb; background: #414141;} .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {color: #ebebeb !important;text-decoration: none; background-color: #323232!important;} .btn-default.active, .btn-default.active:focus, .btn-default.active:hover, .open>.dropdown-toggle.btn-default, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {color :#ebebeb;}.cke_top {border-bottom: 1px solid #262626 !important;background: #323232 !important;}.cke_chrome {border: 1px solid #1e1e1e !important;} #cke_1_contents {background: rgb(50, 50, 50);}.cke_bottom {border-top: 1px solid #414141 !important;background: #323232 !important;} #container-messagerie-compose > form > div:nth-child(1) > div.col-sm-12.col-md-5.col-lg-6 > div > span {color: #ebebeb;}.cke_wysiwyg_frame, .cke_wysiwyg_div {background-color: #323232 !important;color: #ebebeb;}.btn-blanc {background: #414141; border: none;} .cloud .btn-breadcrumb .btn.btn-link:first-child .prenom-eleve {color : #ffffff !important;} .breadcrumb>.active {color: #ebebeb; } .breadcrumb.titre-page li.active:last-child:before { color: #ebebeb !important;}.pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover {   background-color: #414141;   border-color: #ddd0;}
             .pagination>li>a, .pagination>li>span {    background-color: #323232; border: 1px solid #414141;} .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover { background-color: #414141; border-color: #6c6c6c; } .form-control {     background-color: #323232; color : #ebebeb} textarea:focus {background-color: #323232;} #libelle {color : #ebebeb}#url {color : #ebebeb}.modal-content .modal-header button.btn-close i.fa-close {    color: #ebebeb; } #valeur {color : #ebebeb} hr {border-top: 1px solid #414141;}.help-block  {color: #d5d5d5;} .table-hover>tbody>tr:hover {background-color: #323232 !important;}.cloud .btn-breadcrumb .btn.btn-link:not(:last-child):after 
             { border-left: 10px solid #414141 !important; }.cloud .btn-breadcrumb .btn.btn-link { background: #414141 !important; } .table .table {background-color: #414141;}.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {border-color: #2c2c2c} .nav-tabs>li.active>a {border: 1px solid #323232;}.nav-tabs {border-bottom: 1px solid #323232;} .nav-tabs>li.active:after {background-color: #32323200; }.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {box-shadow: none;translate: 0px 3px;border : none ;background-image: linear-gradient(#444444 , #323232);}.bg-info { background: #323232;} #cdtnavigation-action .list-group-item:hover {background: #323232 !important;}.btn-default:hover {color: var(--light-primary-color) ;background: #414141;}.page-messagerie .inbox-nav li:hover {background: #414141 !important;}.un-message.clickable {color : #ffffff !important} .page-messagerie .messages-listing {background: #414141;} .dhx_scale_holder_now {background : #686868}.dhx_month_head { border-right: 1px solid #323232; }.dhx_month_body { border-right: 1px solid #323232;border-bottom: 1px solid #323232;}.dhx_now .dhx_month_body , .dhx_now .dhx_month_head{background-color : #686868}.dhx_after .dhx_month_head,.dhx_before .dhx_month_head {background : #414141} .dhx_after .dhx_month_body, .dhx_before .dhx_month_body, .dhx_month_body { background : #414141} .dhx_month_body {background-color: #414141;}.dhx_month_head {background-color: #414141; color: #ebebeb } small {color : #ebebeb !important} .dhx_cal_data {border-top-color : #323232 !important}.dhx_cal_header {border-top: 1px solid #323232;border-right: 1px solid #323232;} .dhx_scale_bar{ z-index : 2 ; border-left : 1px solid #323232 ;color : #ebebeb ;background: #414141;} 
@@ -567,18 +576,123 @@ function RunMainContent() {
             !important} div.help-block.pull-left.date-conseil{ color : #ebebeb !important}#encart-notes .bloc-legende table caption {color: #fff !important;} .ed-card {background: #323232 !important } .link:not(.blue-link), a:not(.blue-link), button.btn.btn-link:not(.blue-link) { color: #ebebeb;} .container-bg {box-shadow: 0 0 20px rgb(0 0 0 / 50%) !important; border : none !important;background :#323232 !important } #item-contact-famille-eleve > a {background-color: #404040 !important;} #footer > ul > li:nth-child(3) > a {background-color: #404040 !important;}#footer > ul > li.hidden-xs.hidden-sm > a { background-color: #404040 !important;} 
             #nom-etb {box-shadow : 0 0 0px 0px rgba(0,0,0,0%)} #encart-postit > div > ed-postits > div > div.liste-postit > div { color : #323232} .message-item .message-overlay { position: absolute; top: 0; left: -20px;width: 40px;height: 40px;background: #323232 ;border: 2px solid #e2e7ed; border-radius: 100%; text-align: center line-height: 45px;} #user-account-link {background-color: #404040 !important} a {color : #ebebeb !important} #password { background-color: #323232 !important; border-color :#686868 ! important;}  ::placeholder {color : #ebebeb;} #username.input-block-level {  background-color: #323232 !important; border-color :#686868 ! important;} span.pull-left.version-site:hover { color : #ebebeb !important}
             :root {     --footer-primary-color: #414141;     --hover-primary-color: #aad8ea;     --light-primary-color: ${Color2Param? colorSaved : "#0f8fd1"};     --smalldark-primary-color: #2e6ac8;     --dark-primary-color: ${Color1Param?colorSaved2 : "#0e3e85"};     --ultradark-primary-color: #092354;     --light-secondary-color: #ff9393;     --secondary-color: ${Color2Param? colorSaved : "#cd1478"};     --dark-secondary-color: #960b56;     --light-placeholder-color: #383838;     --smalldark-placeholder-color: #4e4e4e;     --dark-placeholder-color: #c3c3c3;     --ultradark-placeholder-color: #887f7f;     --light-notice-color: #fffca0;     --middle-notice-color: #fff575;     --dark-notice-color: #f2ec9e;     --travail-color: #6aaf11;     --contenu-color: #0c91c6;     --search-color: #a5a7ab; }                                      .active .overlay {     background: linear-gradient(rgba(13,79,147,0) ,rgba(0,0,0,0)) !important;     opacity: 1;}                                                           .overlay {     position: absolute;     top: 0;     left: 0;     right: 0;     bottom: 0;     display: flex;     background: ${Color1Param ?color2rgba : "#ffffff50"} ! important;     text-align: center;     color: #fff;     opacity: 0;     transition: all .5s; }      body {     font-family: Helvetica Neue,Helvetica,Arial,sans-serif;     line-height: 1.42857143;     color: #ebebeb ! important;     background-color: #323232 !important; }  button.btn.btn-link:not(.blue-link) {     color: #ebebeb; }  .mdp-lost[_ngcontent-nok-c62] {     float: right;     margin: -3vh 0 4vh;     font-style: italic;     color: #ff6161; }  .version-site[_ngcontent-nok-c63] {     color: #ebebeb; }  .login-container[_ngcontent-nok-c63] header[_ngcontent-nok-c63] h1[_ngcontent-nok-c63] {     font-size: 15px;     color: #ebebeb;     margin-top: 5px; `
-        
-            let modeGraphic = false
-            
-            function addEventListenerForSubjectGraphic(){
-                [...document.querySelectorAll(".fa.fa-bar-chart.fa-2x")].forEach(elm => {
-                    elm.addEventListener("click", () => { 
-                        setGraphicColor()
-                    })
-                }); 
-            }
+        }
 
-            function setGraphicColor(){
+
+        // graphic and average
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        // => 
+
+        let modeEvaluation = false;
+        let modeGraphic = false
+        
+        let inRequest =  false;
+        // for fetch data 
+        let Data;
+        // animation code :
+        let smallAnimationHTML = `<div style="translate: -2rem -4.4vh;scale : 0.5;z-index : 51;"><div class="loadingio-spinner-ellipsis-8eibfvar66v"><div class="ldio-jswtrtkp4z">
+        <div></div><div></div><div></div><div></div><div></div>
+        </div></div>
+        <style type="text/css">
+        @keyframes ldio-jswtrtkp4z {
+            0% { transform: translate(5px,39px) scale(0); }
+            25% { transform: translate(5px,39px) scale(0); }
+            50% { transform: translate(5px,39px) scale(1); }
+            75% { transform: translate(39px,39px) scale(1); }
+            100% { transform: translate(73px,39px) scale(1); }
+        }
+        @keyframes ldio-jswtrtkp4z-r {
+            0% { transform: translate(73px,39px) scale(1); }
+            100% { transform: translate(73px,39px) scale(0); }
+        }
+        @keyframes ldio-jswtrtkp4z-c {
+            0% { background: #00aaff }
+            25% { background: #00c8ff }
+            50% { background: #00aaff }
+            75% { background: #00c8ff }
+            100% { background: #00aaff }
+        }
+        .ldio-jswtrtkp4z div {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            transform: translate(39px,39px) scale(1);
+            background: #00aaff;
+            animation: ldio-jswtrtkp4z 2.4390243902439024s infinite cubic-bezier(0,0.5,0.5,1);
+        }
+        .ldio-jswtrtkp4z div:nth-child(1) {
+            background: #00c8ff;
+            transform: translate(73px,39px) scale(1);
+            animation: ldio-jswtrtkp4z-r 0.6097560975609756s infinite cubic-bezier(0,0.5,0.5,1), ldio-jswtrtkp4z-c 2.4390243902439024s infinite step-start;
+        }.ldio-jswtrtkp4z div:nth-child(2) {
+            animation-delay: -0.6097560975609756s;
+            background: #00aaff;
+        }.ldio-jswtrtkp4z div:nth-child(3) {
+            animation-delay: -1.2195121951219512s;
+            background: #00c8ff;
+        }.ldio-jswtrtkp4z div:nth-child(4) {
+            animation-delay: -1.8292682926829267s;
+            background: #00aaff;
+        }.ldio-jswtrtkp4z div:nth-child(5) {
+            animation-delay: -2.4390243902439024s;
+            background: #00c8ff;
+        }
+        .loadingio-spinner-ellipsis-8eibfvar66v {
+            width: 98px;
+            height: 98px;
+            display: inline-block;
+            overflow: hidden;
+            background: none;
+        }
+        .ldio-jswtrtkp4z {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform: translateZ(0) scale(0.98);
+            backface-visibility: hidden;
+            transform-origin: 0 0; /* see note above */
+        }
+        .ldio-jswtrtkp4z div { box-sizing: content-box; }
+        /* generated by https://loading.io/ */
+        </style>`
+        
+        function setTabVariables(elm) {
+            switch(elm.innerText) {
+                case "Moyennes" : 
+                    modeGraphic = false
+                    modeEvaluation = false
+                    break  
+                case "Evaluations" :
+                    modeGraphic = false
+                    modeEvaluation = true
+                    break 
+                case "Graphiques" :
+                    modeGraphic = true
+                    modeEvaluation = false
+                    break 
+            }
+            
+        }
+        
+        function addEventListenerForSubjectGraphic(){
+            [...document.querySelectorAll(".fa.fa-bar-chart.fa-2x")].forEach(elm => {
+                elm.addEventListener("click", () => { 
+                    setGraphicColor()
+                })
+            }); 
+        }
+        
+        function setGraphicColor(){
+            if (colorSaved3 === "rgb(35, 35, 35)"){ 
                 window.setTimeout(() => {
                     [...document.querySelectorAll(".highcharts-background")].forEach(elm => {
                         elm.setAttribute("fill", "#484848")
@@ -590,250 +704,185 @@ function RunMainContent() {
                     })
                 },5)
             }
-
-            function ChangeOnBtnGraphicClick(){
-                addEventListenerForSubjectGraphic();
-                [...document.querySelectorAll(".nav-link")].forEach(elm => {
-                    elm.addEventListener("click", () => { 
-                        if(elm.innerText === "Graphiques") {
-                            setGraphicColor()
-                        }
-
-                    })
-                })
-            }
-
-            let inRequest =  false;
-            // for fetch data 
-            let Data;
-            // animation code :
-            let smallAnimationHTML = `<div style="translate: -2rem -4.4vh;scale : 0.5;z-index : 51;"><div class="loadingio-spinner-ellipsis-8eibfvar66v"><div class="ldio-jswtrtkp4z">
-            <div></div><div></div><div></div><div></div><div></div>
-            </div></div>
-            <style type="text/css">
-            @keyframes ldio-jswtrtkp4z {
-            0% { transform: translate(5px,39px) scale(0); }
-            25% { transform: translate(5px,39px) scale(0); }
-            50% { transform: translate(5px,39px) scale(1); }
-            75% { transform: translate(39px,39px) scale(1); }
-            100% { transform: translate(73px,39px) scale(1); }
-            }
-            @keyframes ldio-jswtrtkp4z-r {
-            0% { transform: translate(73px,39px) scale(1); }
-            100% { transform: translate(73px,39px) scale(0); }
-            }
-            @keyframes ldio-jswtrtkp4z-c {
-            0% { background: #00aaff }
-            25% { background: #00c8ff }
-            50% { background: #00aaff }
-            75% { background: #00c8ff }
-            100% { background: #00aaff }
-            }
-            .ldio-jswtrtkp4z div {
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            transform: translate(39px,39px) scale(1);
-            background: #00aaff;
-            animation: ldio-jswtrtkp4z 2.4390243902439024s infinite cubic-bezier(0,0.5,0.5,1);
-            }
-            .ldio-jswtrtkp4z div:nth-child(1) {
-            background: #00c8ff;
-            transform: translate(73px,39px) scale(1);
-            animation: ldio-jswtrtkp4z-r 0.6097560975609756s infinite cubic-bezier(0,0.5,0.5,1), ldio-jswtrtkp4z-c 2.4390243902439024s infinite step-start;
-            }.ldio-jswtrtkp4z div:nth-child(2) {
-            animation-delay: -0.6097560975609756s;
-            background: #00aaff;
-            }.ldio-jswtrtkp4z div:nth-child(3) {
-            animation-delay: -1.2195121951219512s;
-            background: #00c8ff;
-            }.ldio-jswtrtkp4z div:nth-child(4) {
-            animation-delay: -1.8292682926829267s;
-            background: #00aaff;
-            }.ldio-jswtrtkp4z div:nth-child(5) {
-            animation-delay: -2.4390243902439024s;
-            background: #00c8ff;
-            }
-            .loadingio-spinner-ellipsis-8eibfvar66v {
-            width: 98px;
-            height: 98px;
-            display: inline-block;
-            overflow: hidden;
-            background: none;
-            }
-            .ldio-jswtrtkp4z {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform: translateZ(0) scale(0.98);
-            backface-visibility: hidden;
-            transform-origin: 0 0; /* see note above */
-            }
-            .ldio-jswtrtkp4z div { box-sizing: content-box; }
-            /* generated by https://loading.io/ */
-            </style>`
-
-            function setPeriodId() {
-                let i = 0;     
-                [...document.querySelectorAll("[data-toggle='tab']")].forEach(element => { 
-                    element.setAttribute("data-id", i)
-                    i++
-                })
-
-            }
-
-            function makeAverageElement(average=null) { 
-                if (!average) average = ""
-                const HTML = `
-                <td class="discipline">
-                <span class="nommatiere"><b style="color : var(--secondary-color);">MOYENNE GENERAL</b></span></td>
-                <td class="relevemoyenne ng-star-inserted"><span ${average === "" ? `style="position : absolute;"` : ""} class="ng-star-inserted">${average === "" ? smallAnimationHTML : average.replace(".",",")}</span></td>
-                <td style="border-left : none;" class="notes"></td>
-                <td  style="border-left : none;" class="graph text-center"></td>`
-
-                if (document.querySelector(".moyenne-ecole-directe-customizer") == null){
-                    const tr = document.createElement("tr")
-                    tr.classList = "ng-star-inserted moyenne-ecole-directe-customizer"
-                    tr.innerHTML = HTML
-                    document.querySelector("tbody").appendChild(tr) 
-                }else {
-                    document.querySelector(".moyenne-ecole-directe-customizer").innerHTML = HTML
-                }
-            }
-
-            function averageCalculation(obj){
-                let a = 0
-                let n = 0
-                Object.values(obj).forEach(value => {
-                    if (value.moyenne !== ""){
-                        const number = parseFloat(value.moyenne.replace("," , "."))
-                        const coef = value.coef === 0 ? 1 : value.coef
-                        a += (number * coef)
-                        n += coef
-                    }
-                })
-                let average = parseFloat(a / n).toFixed(2) 
-                return isNaN(average) ? null : average
-            }
-
-            function averageDataHandling(dt , periodNumber){
-                const averageObject = dt.data.periodes[periodNumber].ensembleMatieres.disciplines 
-                const average = averageCalculation(averageObject)
-                if (!average) {
-                    makeAverageElement(" ")
-                    return
-                }
-                makeAverageElement(average)
-            }
-
-            async function averageHandling(periodNumber){
-                const token = JSON.parse(window.sessionStorage.getItem("token"))
-                const pupilId = JSON.parse(window.sessionStorage.getItem("accounts")).accounts[0].id
-                
-                makeAverageElement()
-                if (token != null && pupilId){
-                    if (Data != null){
-                        inRequest = false
-                        averageDataHandling(Data, periodNumber)
-                    } else {
-                        if (inRequest) return // to avoid making request when one is already in progress
-                        inRequest = true
-                        const request = {
-                            "headers": {
-                                "x-token": token
-                            },
-                            "body": "data={\n    \"anneeScolaire\": \"\"\n}",
-                            method: "POST",
-                        }
-                        const req = await fetch(`https://api.ecoledirecte.com/v3/eleves/${pupilId}/notes.awp?verbe=get&v=4.21.0`, request)
-                        const data = await req.json()
-                        Data = data
-                        averageDataHandling(data , periodNumber)
-                    }
-                } else {
-                    window.location.reload()
-                }
-
-            }
-
-            function ChangeOnTabClick(){
-                setPeriodId(); 
-                [...document.querySelectorAll("[data-toggle='tab']")].forEach(elm => {                         
-                    elm.addEventListener("click", () => { 
-                        
-                        // calcul de moyenne
-                        const id = elm.getAttribute("data-id")
-                        averageHandling(id)
-
-
-                        addEventListenerForSubjectGraphic();
-                        const active  = document.querySelector(".nav-link.active")
-                        switch(active.innerText) {
-                            case "Moyennes" : 
-                                modeGraphic = false
-                                break  
-                            case "Evaluations" :
-                                modeGraphic = false
-                                break 
-                            case "Graphiques" :
-                                modeGraphic = true
-                                break 
-                        }
-
-                        ChangeOnBtnGraphicClick()
-
-                        if (modeGraphic){
-                            setGraphicColor()
-                        }
-                    })
-                });
-            }
-
-            function GraphicModeHandler() {
-                [...document.querySelectorAll(".nav-link")].forEach(elm => {
-                    elm.addEventListener("click", () => { 
-                        addEventListenerForSubjectGraphic();
-                        switch(elm.innerText) {
-                            case "Moyennes" : 
-                                modeGraphic = false
-                                break  
-                            case "Evaluations" :
-                                modeGraphic = false
-                                break 
-                            case "Graphiques" :
-                                modeGraphic = true
-                                break 
-                        }
-                    })
-                })
-            }
-
-
-
-            function graphicMain(){
-                ChangeOnTabClick()
-                GraphicModeHandler()
-                ChangeOnBtnGraphicClick()
-            }
-
-            waitForElm(".item-actif").then(elm => {
-                elm.addEventListener("click", () => {
-                    graphicMain()
-                })
-            })
-            waitForElm(".nav-link").then(elm => { 
-                graphicMain()
-            })
-            
-
-            waitForElm(".highcharts-background").then(elm => { 
-                setGraphicColor()
-            })
-
-            window.onresize = setGraphicColor
-
         }
+        
+        function ChangeOnBtnGraphicClick(id=null){
+            if (!id) id = 0
+            addEventListenerForSubjectGraphic();
+            [...document.querySelectorAll(".nav-link")].forEach(elm => {
+                elm.addEventListener("click", () => { 
+                    setTabVariables(elm)
+                    if(modeGraphic) {
+                        setGraphicColor()
+
+                    } else if (modeEvaluation) {
+                        addEventListenerForSubjectGraphic();
+                        averageHandling(id)
+                    } else { // modeMoyenne 
+                        averageHandling(id)
+                    }
+                    
+                })
+            })
+        }
+        
+        
+        function setPeriodId() {
+            let i = 0;     
+            [...document.querySelectorAll("[data-toggle='tab']")].forEach(element => { 
+                element.setAttribute("data-id", i)
+                i++
+            })
+        }
+        
+        function makeAverageElement(average=null) { 
+            if (!average) average = ""
+            const HTML = `
+            <td class="discipline">
+            <span class="nommatiere"><b style="color : var(--secondary-color);">MOYENNE GENERALE</b></span></td>
+            <td class="relevemoyenne ng-star-inserted"><span
+             ${average === "" ? `style="position : absolute;"` : `title="Moyenne calculée grace à l'API d'école directe"`} 
+             class="ng-star-inserted">${average === "" ? smallAnimationHTML : average.replace(".",",")}</span></td>
+            <td style="border-left : none;" class="notes"></td>
+            <td  style="border-left : none;" class="graph text-center"></td>`
+            
+            if (document.querySelector(".moyenne-ecole-directe-customizer") == null){
+                const tr = document.createElement("tr")
+                tr.classList = "ng-star-inserted moyenne-ecole-directe-customizer"
+                tr.innerHTML = HTML
+                if (document.querySelector("tbody") != null){
+                    document.querySelector("tbody").appendChild(tr) 
+                }
+            }else {
+                document.querySelector(".moyenne-ecole-directe-customizer").innerHTML = HTML
+            }
+        }
+        
+        function averageCalculation(obj){
+            let a = 0
+            let n = 0
+            Object.values(obj).forEach(value => {
+                if (value.moyenne !== ""){
+                    const number = parseFloat(value.moyenne.replace("," , "."))
+                    const coef = value.coef === 0 ? 1 : value.coef
+                    a += (number * coef)
+                    n += coef
+                }
+            })
+            let average = parseFloat(a / n).toFixed(2) 
+            return isNaN(average) ? null : average
+        }
+
+        function averageDataHandling(dt , periodNumber){
+            const averageObject = dt.data.periodes[periodNumber].ensembleMatieres.disciplines 
+            const average = averageCalculation(averageObject)
+            if (!average) {
+                makeAverageElement(" ")
+                return
+            }
+            makeAverageElement(average)
+        }
+        
+        async function averageHandling(periodNumber){
+            // if (average) {
+            const token = JSON.parse(window.sessionStorage.getItem("token"))
+            const pupilId = JSON.parse(window.sessionStorage.getItem("accounts")).accounts[0].id
+            
+            makeAverageElement()
+            if (token != null && pupilId){
+                if (Data != null){
+                    inRequest = false
+                    averageDataHandling(Data, periodNumber)
+                } else {
+                    if (inRequest) return // to avoid making request when one is already in progress
+                    inRequest = true
+                    const request = {
+                        "headers": {
+                            "x-token": token
+                        },
+                        "body": "data={\n    \"anneeScolaire\": \"\"\n}",
+                        method: "POST",
+                    }
+                    const req = await fetch(`https://api.ecoledirecte.com/v3/eleves/${pupilId}/notes.awp?verbe=get&v=4.21.0`, request)
+                    const data = await req.json()
+                    Data = data
+                    averageDataHandling(data , periodNumber)
+                }
+            } else {
+                window.location.reload()
+            }
+            // }
+        }
+        
+        function ChangeOnTabClick(){
+            setPeriodId(); 
+            [...document.querySelectorAll("[data-toggle='tab']")].forEach(elm => {                         
+                elm.addEventListener("click", () => { 
+                    
+                    // calcul de moyenne
+                    const id = elm.getAttribute("data-id")
+                    averageHandling(id)
+                    
+                    
+                    addEventListenerForSubjectGraphic();
+                    const active  = document.querySelector(".nav-link.active")
+                    setTabVariables(active)
+
+                    ChangeOnBtnGraphicClick(elm.getAttribute("data-id"))
+                            
+                            if (modeGraphic){
+                                setGraphicColor()
+                            } else if (modeEvaluation) {
+                                addEventListenerForSubjectGraphic()
+                            }
+                        })
+                    });
+        }
+        
+        function GraphicModeHandler() {
+            [...document.querySelectorAll(".nav-link")].forEach(elm => {
+                elm.addEventListener("click", () => { 
+                    addEventListenerForSubjectGraphic();
+                    setTabVariables(elm)
+                        })
+            })
+        }
+
+
+
+        function graphicMain(){
+            ChangeOnTabClick()
+            GraphicModeHandler()
+            ChangeOnBtnGraphicClick()
+        }
+        
+        waitForElm(".icon-ed_carnetnotes").then(elm => {
+            elm.parentElement.parentElement.parentElement.addEventListener("click", () => {
+                if (document.querySelector(".table.releve.ed-table") != null){
+                    graphicMain()
+                    averageHandling(0)
+                }
+            })
+        })
+
+        waitForElm(".table.releve.ed-table").then(elm => { 
+            graphicMain()
+            averageHandling(0)
+        })
+        
+        
+        waitForElm(".highcharts-background").then(elm => { 
+            setGraphicColor()
+        })
+
+        onPathInclude("/Notes" , () => {
+            waitForElm("tbody").then(elm => { 
+                averageHandling(0)
+            })
+        })
+        
+        window.onresize = setGraphicColor
+
         if (BackgroundColorParam === false){
             NewStyleRule.innerText = `.ed-menu-eleve-seul .active .ed-menu-image-wrapper div:before {background: linear-gradient(rgba(13,79,147,0),rgba(13,79,147,0));} .ed-menu .rond-menu-eleve:not(.no-photo) {background: no-repeat center center ${Color1Param?colorSaved2 : "white"} ;}.ed-menu .profile {background: no-repeat center center/100% rgba(0,0,0,0%) ;} :root {     --footer-primary-color: #edf3fd;     --hover-primary-color: #aad8ea;     --light-primary-color: ${Color2Param? colorSaved : "#0f8fd1"};     --smalldark-primary-color: #2e6ac8;     --dark-primary-color: ${Color1Param?colorSaved2 : "#0e3e85"};     --ultradark-primary-color: #092354;     --light-secondary-color: #ff9393;     --secondary-color: ${Color2Param? colorSaved : "#cd1478"};     --dark-secondary-color: #960b56;     --light-placeholder-color: #f5f6f7;     --smalldark-placeholder-color: #e4e7ea;     --dark-placeholder-color: #c3c3c3;     --ultradark-placeholder-color: #887f7f;     --light-notice-color: #fffca0;     --middle-notice-color: #fff575;     --dark-notice-color: #f2ec9e;     --travail-color: #6aaf11;     --contenu-color: #0c91c6;     --search-color: #a5a7ab; }                                      .active .overlay {     background: linear-gradient(rgba(13,79,147,0) ,rgba(0,0,0,0)) !important;     opacity: 1;}                                                           .overlay {     position: absolute;     top: 0;     left: 0;     right: 0;     bottom: 0;     display: flex;     background: ${Color1Param ?color2rgba : "#ffffff50"} ! important;     text-align: center;     color: #fff;     opacity: 0;     transition: all .5s; }`
         }
@@ -842,7 +891,7 @@ function RunMainContent() {
             NewCSSRule.innerHTML = `.ed-menu .profile {background: no-repeat center center/100% rgba(0,0,0,0%);} .ed-menu-eleve-seul .active .ed-menu-image-wrapper div:before {background: linear-gradient(rgba(13,79,147,0),rgba(13,79,147,0));} .ed-menu .rond-menu-eleve:not(.no-photo) {background: no-repeat center center ${Color1Param?colorSaved2 : "white"} ;}`
             document.head.appendChild(NewCSSRule)
             
-        
+            
         Multicolor(MulticolorParam)
         ChangeImage() 
 
@@ -861,7 +910,9 @@ function RunMainContent() {
 
 
     /* 
-
+        span[accordion-heading] {
+            color : #ebebeb
+        }
     
     .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
         background-color: #ff0000;
