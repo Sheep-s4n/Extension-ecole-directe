@@ -4,4 +4,3 @@ Extension current Feature :
 2 - auto log in
 3 - average calculation
 4 - profile picture
-

@@ -9,7 +9,7 @@ chrome.storage.local.get(["FirstTimeUsingTheExtension"] , (responce) => {
         chrome.storage.sync.set({choosenColor1 : obj1})
         let obj2 = JSON.stringify({Active : true, Color : "#0f8fd1" , Equiped : true})
         chrome.storage.sync.set({choosenColor2 : obj2})
-        chrome.storage.local.set({Parameters : {BackgroundColorChecked: true, Color1Checked: true,Color2Checked: true ,ProfilePicture: true , Multicolor : false , AutoLogIn : false}})
+        chrome.storage.local.set({Parameters : {BackgroundColorChecked: true, Color1Checked: true,Color2Checked: true ,ProfilePicture: true , Multicolor : false , AutoLogIn : false , AverageCalculator : true}})
         chrome.storage.local.set({customImage : "https://th.bing.com/th/id/R.ea411ebf6153f5f3201aa5a134949f3e?rik=TMsZisGUrPRPSA&pid=ImgRaw&r=0"})
         chrome.storage.local.set({ImageProvenence : "Link"})
         chrome.storage.local.set({FirstTimeUsingTheExtension : "nope"})
@@ -828,50 +828,82 @@ if (responce.FirstTimeUsingTheExtension !== undefined){
         BACKGROUNDUI.style.visibility = "hidden"
     })
 
+    
+    const Parameters = {
+        Color1Checked : { 
+            id :"Color1CheckBox",
+            main : defaultMain("#FirstPart")
+        },
+        Color2Checked : { 
+            id :"Color2CheckBox",
+            main : defaultMain("#SecondPart")
+        },
+        Multicolor : "MulticolorCheckBox",
+        AutoLogIn : "auto-log-in",
+        BackgroundColorChecked : {
+            id : "BackgroundColorCheckBox",
+            main : defaultMain("#ThirdPart")
+        },
+        ProfilePicture : {
+            id : "ImageColorCheckBox",
+            main : defaultMain("#FourthPart")
+        },
+        AverageCalculator : "AverageCalculator"
+    }
+    // to create new = ~{value name (in json)} : ~{input id}
+    
+    function getDisplay(bool){
+        if (bool) return "block"
+        return "none"
+    }
 
+    function defaultMain(id){
+        return (display) => {document.querySelector(id).style.display = display}
+    }
+
+    function MakeJSON(linkObject) {
+        const JSON = {}
+        Object.keys(linkObject).forEach((key) => {
+            let isChecked;
+            const value = linkObject[key]
+            if (typeof value === "string") {
+                isChecked = document.querySelector("#"+value).checked
+            }else {
+                isChecked = document.querySelector("#"+value.id).checked
+                value?.main(getDisplay(isChecked))
+            }
+
+            JSON[key]  = isChecked 
+        })
+        return JSON
+    }
+
+    function SetDataFromJson(linkObject , savedJson){ 
+        Object.keys(linkObject).forEach((key) => {
+            const isChecked = savedJson[key]
+            const value = linkObject[key]
+            if (typeof value === "string") {
+                document.querySelector("#"+value).checked = isChecked
+            }else {
+                document.querySelector("#"+value.id).checked = isChecked
+                value?.main(getDisplay(isChecked))
+            }
+        })
+    }
 
 
 
     document.addEventListener("input" , (e) => {
-    if (e.target.value === "on"){
-        let Inputs = document.querySelectorAll(".ParamCheckBox")
-        let JSON = {
-            Color1Checked : "false",
-            Color2Checked : "false",
-            BackgroundColorChecked : "false",
-            ProfilePicture : "false",
-            Multicolor : "false",
-            AutoLogIn : "false",
+        if (e.target.value === "on"){
+            const JSON =  MakeJSON(Parameters)
+            chrome.storage.local.set({Parameters : JSON})
+            ChangeLogoToTipp(true)
         }
-            Inputs.forEach((Input) => {
-                let Value = Input.checked
-                let Display;
-                if (Value === true){
-                    Display = "block"
-                }else {
-                    Display = "none"
-                }
-                if (Input.getAttribute("id") === "Color1CheckBox"){
-                    JSON.Color1Checked = Value
-                    document.querySelector("#FirstPart").style.display = Display
-                }else if (Input.getAttribute("id") === "Color2CheckBox"){
-                    JSON.Color2Checked = Value
-                    document.querySelector("#SecondPart").style.display = Display
-                }else if (Input.getAttribute("id") === "BackgroundColorCheckBox"){
-                    JSON.BackgroundColorChecked = Value
-                    document.querySelector("#ThirdPart").style.display = Display
-                }else if (Input.getAttribute("id") === "ImageColorCheckBox"){
-                    JSON.ProfilePicture = Value
-                    document.querySelector("#FourthPart").style.display = Display
-                }else if (Input.getAttribute("id") === "MulticolorCheckBox"){
-                    JSON.Multicolor = Value;
-                }else if (Input.getAttribute("id") === "auto-log-in"){
-                    JSON.AutoLogIn = Value;
-                }
-            })
-        chrome.storage.local.set({Parameters : JSON})
-        ChangeLogoToTipp(true)
-    }
+    })
+
+    chrome.storage.local.get(["Parameters"], function(responce){
+        const json = responce.Parameters
+        SetDataFromJson(Parameters ,json)
     })
 
     function ChangeMulticolor(){
@@ -885,41 +917,7 @@ if (responce.FirstTimeUsingTheExtension !== undefined){
     document.querySelector("#Color2CheckBox").addEventListener("click" , ChangeMulticolor)
     document.querySelector("#MulticolorCheckBox").addEventListener("click" , ChangeBasicColor)
 
-    function ReturnDisplay(Boolean){
-        let Visibility;
-        if (Boolean === true){
-            Visibility = "block"
-        }else {
-            Visibility = "none"
-        }
-        return Visibility
-    }
 
-    chrome.storage.local.get(["Parameters"], function(responce){
-        const DATA = responce.Parameters
-        console.log(DATA)
-        let Inputs = document.querySelectorAll(".ParamCheckBox")
-        Inputs.forEach((Input) => {
-            if (Input.getAttribute("id") === "Color1CheckBox"){
-                Input.checked = DATA.Color1Checked
-                document.querySelector("#FirstPart").style.display = ReturnDisplay(DATA.Color1Checked)
-            }else if (Input.getAttribute("id") === "Color2CheckBox"){
-                Input.checked = DATA.Color2Checked
-                document.querySelector("#SecondPart").style.display = ReturnDisplay(DATA.Color2Checked)
-            }else if (Input.getAttribute("id") === "BackgroundColorCheckBox"){
-                Input.checked = DATA.BackgroundColorChecked
-                document.querySelector("#ThirdPart").style.display = ReturnDisplay(DATA.BackgroundColorChecked)
-            }else if (Input.getAttribute("id") === "ImageColorCheckBox"){
-                Input.checked = DATA.ProfilePicture
-                document.querySelector("#FourthPart").style.display = ReturnDisplay(DATA.ProfilePicture)
-            }else if (Input.getAttribute("id") === "MulticolorCheckBox"){
-                Input.checked = DATA.Multicolor
-            }else if (Input.getAttribute("id") === "auto-log-in"){
-                Input.checked = DATA.AutoLogIn
-            }
-            
-        })
-    })
 
 
     

@@ -266,6 +266,7 @@ function RunMainContent() {
     chrome.storage.local.get(["customImage","Parameters"], function(responce){
         customImage = responce.customImage
         let Params = responce.Parameters
+        const enableAverageAutoCalc = Params.AverageCalculator
         let Color1Param = Params.Color1Checked;
         let Color2Param = Params.Color2Checked;
         let BackgroundColorParam = Params.BackgroundColorChecked;
@@ -544,14 +545,27 @@ function RunMainContent() {
 
         //console.log(colorSaved3,colorSaved,colorSaved2,color1,color2,customImage)
         let eventHasStarted = false
+        const functionParam = [
+            colorSaved3,
+            colorSaved,
+            colorSaved2,
+            Color1Param,
+            Color2Param,
+            BackgroundColorParam,
+            ChangeImage,
+            MulticolorParam,
+            Multicolor , 
+            enableAverageAutoCalc,
+        ]
+
         window.addEventListener("load", (e)=> {
             eventHasStarted = true
-            ChangeStyle(colorSaved3,colorSaved,colorSaved2,Color1Param,Color2Param,BackgroundColorParam,ChangeImage,MulticolorParam,Multicolor)
+            ChangeStyle(...functionParam)
         })
 
         window.setTimeout(() => {
             if (!eventHasStarted){
-                ChangeStyle(colorSaved3,colorSaved,colorSaved2,Color1Param,Color2Param,BackgroundColorParam,ChangeImage,MulticolorParam,Multicolor)
+                ChangeStyle(...functionParam)
             }
         },700)
         })
@@ -559,7 +573,7 @@ function RunMainContent() {
 
 
 
-    function ChangeStyle(colorSaved3,colorSaved,colorSaved2,Color1Param,Color2Param,BackgroundColorParam,ChangeImage,MulticolorParam,Multicolor){
+    function ChangeStyle(colorSaved3,colorSaved,colorSaved2,Color1Param,Color2Param,BackgroundColorParam,ChangeImage,MulticolorParam,Multicolor,enableAverageAutoCalc){
     //console.log("%c Main Function has runed", "font-size :30px")
     StopLoadingAnimation()
             let color2rgba = FindRGBA(colorSaved2)
@@ -784,7 +798,7 @@ function RunMainContent() {
         }
         
         async function averageHandling(periodNumber){
-            // if (average) {
+            if (!enableAverageAutoCalc) return
             const token = JSON.parse(window.sessionStorage.getItem("token"))
             const pupilId = JSON.parse(window.sessionStorage.getItem("accounts")).accounts[0].id
             
@@ -811,7 +825,6 @@ function RunMainContent() {
             } else {
                 window.location.reload()
             }
-            // }
         }
         
         function ChangeOnTabClick(){
@@ -1021,5 +1034,7 @@ function RunMainContent() {
 
 
 }
+
+
 
 // coded by LeMouton_noob
