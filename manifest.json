@@ -12,12 +12,13 @@
         "default_popup" : "popUp.html",
         "default_title" : "Rapelleur pour aller manger"
     },
+    "homepage_url": "https://github.com/The-Sheep-Noob/Extension-ecole-directe",
     "permissions": [
         "storage"    
       ],
     "web_accessible_resources": [{
         "matches": ["<all_urls>"],
-        "resources": ["ecole_directe_emploi_du_temp.png","arrow_left.png","arrow_right.png","Icon/Logo.png","Icon/Menu_des_extensions.png","Icon/cone.png","Icon/extension-location.png"]
+        "resources": ["ecole_directe_emploi_du_temp.png","arrow_left.png","arrow_right.png","Icon/Logo.png","Icon/Menu_des_extensions.png","Icon/cone.png","Icon/extension-location.png","Icon/work-icon2.svg"]
     }],
     "icons": {
         "16": "Icon/Ecole_Directe_logo.png",

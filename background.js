@@ -241,10 +241,12 @@ function RunMainContent() {
     LoadingAnimation.classList = "LoadingAnimationForExtension"
 
     function PlayLoadingAnimation(){
-        document.body.appendChild(LoadingAnimation)
+        if (document.querySelector(".LoadingAnimationForExtension") == null){
+            document.body.appendChild(LoadingAnimation)
+        }
     }
     function StopLoadingAnimation(){
-        if(document.querySelector(".LoadingAnimationForExtension") !== null){
+        if(document.querySelector(".LoadingAnimationForExtension") != null){
             document.querySelector(".LoadingAnimationForExtension").remove()
         }
     }
@@ -778,7 +780,7 @@ function RunMainContent() {
             Object.values(obj).forEach(value => {
                 if (value.moyenne !== ""){
                     const number = parseFloat(value.moyenne.replace("," , "."))
-                    const coef = value.coef === 0 ? 1 : value.coef
+                    const coef = parseInt(value.coef === 0 ? 1 : value.coef)
                     a += (number * coef)
                     n += coef
                 }
@@ -895,6 +897,235 @@ function RunMainContent() {
         })
         
         window.onresize = setGraphicColor
+
+        const WorkOnSchedule = true
+
+        if (WorkOnSchedule) {
+
+            const Data = {}
+            
+            let epoch = new Date().getTime()
+
+            function concateArrayWithSpace(array){
+                let final = ""
+                array.forEach((el) => {final += (el + " ")})
+                return final.slice(0 , final.length - 1)
+            }
+
+            function addZero(num){
+                return String(num).length === 1 ? "0" + String(num) : num
+            }
+
+            function getMonth(month){
+                switch (month) {
+                    case "Déc" : 
+                        return "Dec"
+                    case "Fév" : 
+                        return "Feb"
+                    case "Avr" :
+                        return "Apr"
+                    case "Mai" : 
+                        return "May"
+                    case "Juin" :
+                        return "Jun"
+                    case "Juil" :
+                        return "July"
+                    case "Aoû" :
+                        return "Aug"
+                    default : 
+                        return month
+                }
+            }
+
+            function getDate(elm){
+                const month = getMonth(elm.innerText.split(" ")[1])
+                let startDate = elm.innerText.split(" – ")[0].split(" ")
+                startDate[1] = month
+                startDate = concateArrayWithSpace(startDate)
+                const dateFormat1 = Date.parse(startDate)
+                const dateFormat2 = new Date(0)
+                dateFormat2.setUTCMilliseconds(dateFormat1)
+                return dateFormat2
+            }
+
+            function getDateArray(date){
+                const final = [isNaN(date.getFullYear()) ? null : `${date.getFullYear()}-${addZero(date.getMonth()+1)}-${addZero(date.getDate())}`]
+                for (let i = 0; i < 4 ; i++ ){
+                    date.setDate(date.getDate() + 1)
+                    const validDateFormat  = `${date.getFullYear()}-${addZero(date.getMonth()+1)}-${addZero(date.getDate())}`
+                    final.push(isNaN(date.getFullYear()) ? null : validDateFormat)
+                }
+                return final
+            }
+
+            async function getWorkData(elm){
+                const validDate = getDate(elm)
+                const dateArray = getDateArray(validDate)
+                addBoxMetaData(dateArray)
+                if (validDate != null && !(dateArray[0] in Data)){
+                    try {
+                        const token = JSON.parse(window.sessionStorage.getItem("token"))
+                        const pupilId = JSON.parse(window.sessionStorage.getItem("accounts")).accounts[0].id
+                        
+                        if (token != null && pupilId){
+                            dateArray.forEach(async ( date , i ) => {
+
+                                const url = `https://api.ecoledirecte.com/v3/Eleves/${pupilId}/cahierdetexte/${date}.awp?verbe=get&v=4.22.0`
+                                const req = await fetch(url , {
+                                    "headers": {
+                                        "x-token": token
+                                    },
+                                    "body": "data={}",
+                                    method: "POST",
+                                })
+                                if (req.ok){
+                                    const data = await req.json()
+                                    const object = {}
+                                    data.data.matieres.forEach((matiere) => {
+                                        object[matiere.matiere] = matiere
+                                    })
+                                    Data[date] = object
+                                    if (i === dateArray.length -1){
+                                        addBoxMetaData(dateArray)
+                                        setTimeout(() => {addWorkIcon()},1000)                                        
+                                        console.log(Data)
+                                    }
+                                }
+                            })
+                        } else {
+                            window.location.reload()
+                        }
+                        
+                    } catch (err) {
+                        console.log(err)
+                    }
+                }else {
+                    addWorkIcon()
+                }
+            }
+
+            async function addWorkIcon(){
+                await waitForElm(".dhx_scale_holder");
+                [...document.querySelectorAll(".dhx_scale_holder_now") , ...document.querySelectorAll(".dhx_scale_holder")].splice(0,5)
+                .forEach((column) => {
+                    [...column.children].forEach((box) => {
+                        const date = box.getAttribute("data-date")
+                        const matiere = box.getAttribute("data-matiere")
+                        if ((JSON.stringify(Data[date]) !== "{}") && (JSON.stringify(Data[date]) != null)){ 
+                            if (Data[date].hasOwnProperty([matiere]) && Data[date][matiere].hasOwnProperty("aFaire")){
+                                if (box.querySelector(".extension-homework-icon-jh932n5v304r") != null) return
+                                const icon = document.createElement("img")
+                                icon.alt = "icon des devoirs"
+                                icon.classList = "extension-homework-icon-jh932n5v304r"
+                                icon.title = "double click pour les devoirs"
+                                icon.src = chrome.runtime.getURL("Icon/work-icon2.svg")
+                                icon.style = `cursor : pointer ;position:absolute ; height: 3rem ; width: 3rem; z-index : 1 ;translate: -10rem -1rem;filter: drop-shadow(0px 0px 5px ${Data[date][matiere].interrogation ? "red" : "black" });`
+                                box.children[1].appendChild(icon)
+                            }
+                        }
+                    })
+                })
+                StopLoadingAnimation()
+            }
+
+            async function addBoxMetaData(data){
+                await waitForElm(".dhx_scale_holder");
+                [...document.querySelectorAll(".dhx_scale_holder_now") , ...document.querySelectorAll(".dhx_scale_holder")].splice(0,5)
+                .forEach((column , i) => {
+                    [...column.children].forEach(box => {
+                        box.setAttribute("data-matiere" , box.children[2].firstElementChild.innerText)
+                        box.setAttribute("data-date" , data[i])
+                    })
+                })
+            }
+
+            function WorkOnScheduleHandling(){
+                getWorkData(document.querySelector(".dhx_cal_date"))
+                document.querySelectorAll(".dhx_cal_event").forEach(box => {
+                    box.addEventListener("dblclick" , (e) => {
+                        if (new Date().getTime() - epoch < 100) return
+                        epoch = new Date().getTime()
+                        waitForElm(".modal-body>.ng-star-inserted").then(elm => {
+                            const date = box.getAttribute("data-date")
+                            const matiere = box.getAttribute("data-matiere")
+                            const baseHTML = elm.innerText
+                            if (date in Data) { 
+                                let devoirsHTML;
+                                if (matiere === "CONGÉS"){
+                                    devoirsHTML = "Congés"
+                                } else if (Data[date][matiere] && Data[date][matiere].hasOwnProperty("aFaire")){
+                                    function getInput(checked) {
+                                        return `<br><input id="extension-cursor-jdh823onc3e" style="cursor : pointer;accent-color : var(--light-primary-color); position : relative; top: 0.1rem; right : 0.1rem;" type="checkbox" checked="${checked ? 'true' : 'false'}" />&nbsp<label for="extension-cursor-jdh823onc3e" style="cursor : pointer ;font-size : 1.5rem;font-weight : bold; color :  #ebebeb ">Effectué</label>`
+                                    }
+
+                                    devoirsHTML = `</br></br>
+                                    <span style="color : var(--light-primary-color);font-weight : bold ; font-size : 1.6rem">${matiere} - Devoirs</span>
+                                    ${getInput(true)}
+                                    ${Data[date][matiere].interrogation ? `<br><span style="font-size : 1.5rem;font-weight : bold; color :  rgb(221,0,0) ">Contrôle</span>` : ""}
+                                    </br></br><span style=${Data[date][matiere].aFaire.effectue ? "text-decoration:line-through;" : ""}>${atob(Data[date][matiere].aFaire.contenu)}</span>` 
+                                }else {
+                                    devoirsHTML = ""
+                                }
+                                elm.innerHTML = `${baseHTML}${devoirsHTML}`
+
+                                if (document.querySelector("#extension-cursor-jdh823onc3e")){
+                                    let checked = true
+                                    Data[date][matiere].aFaire.effectue ? checked = true : checked = false   
+                                    document.querySelector("#extension-cursor-jdh823onc3e").checked = checked
+                                    document.querySelector("#extension-cursor-jdh823onc3e").addEventListener("change", (e) => {
+                                        const elm = e.target
+                                        const checked = elm.checked
+                                        if (checked){
+                                            elm.parentElement.lastElementChild.style = "text-decoration:line-through;"
+                                        }else {
+                                            elm.parentElement.lastElementChild.style = ""
+                                        }
+                                        Data[date][matiere].aFaire.effectue = checked
+                                        /* requete pour effectue :
+                                        fetch("https://api.ecoledirecte.com/v3/Eleves/2076/cahierdetexte.awp?verbe=put&v=4.22.0", {
+                                        "headers": {
+                                            "x-token": ""
+                                        },
+                                        "body": "data={\n    \"idDevoirsEffectues\": [],\n    \"idDevoirsNonEffectues\": [\n        6952\n    ]\n}",
+                                        "method": "POST",
+                                        }) */
+                                    })
+                                }
+                            }else {
+                                elm.innerText = "Week end"
+                            }
+                        })
+                    })
+                })
+            }
+
+            function main(){
+                onPathInclude("/EmploiDuTemps" , () => {
+                    StopLoadingAnimation()
+                    PlayLoadingAnimation()
+                    waitForElm(".dhx_cal_event").then(elm => { 
+                        setTimeout(() => {
+                            WorkOnScheduleHandling() 
+                        }, 400)
+                    })  
+                })
+            }
+
+            onPathInclude("/EmploiDuTemps" , () => {
+                document.querySelector(".dhx_cal_next_button").addEventListener("click", () => {
+                    main()
+                })
+                document.querySelector(".dhx_cal_prev_button").addEventListener("click", () => {
+                    main()
+                })
+
+                waitForElm(".dhx_cal_date").then(elm => {
+                    main()
+                })
+            })
+
+            window.addEventListener('resize',  main);
+        }
 
         if (BackgroundColorParam === false){
             NewStyleRule.innerText = `.ed-menu-eleve-seul .active .ed-menu-image-wrapper div:before {background: linear-gradient(rgba(13,79,147,0),rgba(13,79,147,0));} .ed-menu .rond-menu-eleve:not(.no-photo) {background: no-repeat center center ${Color1Param?colorSaved2 : "white"} ;}.ed-menu .profile {background: no-repeat center center/100% rgba(0,0,0,0%) ;} :root {     --footer-primary-color: #edf3fd;     --hover-primary-color: #aad8ea;     --light-primary-color: ${Color2Param? colorSaved : "#0f8fd1"};     --smalldark-primary-color: #2e6ac8;     --dark-primary-color: ${Color1Param?colorSaved2 : "#0e3e85"};     --ultradark-primary-color: #092354;     --light-secondary-color: #ff9393;     --secondary-color: ${Color2Param? colorSaved : "#cd1478"};     --dark-secondary-color: #960b56;     --light-placeholder-color: #f5f6f7;     --smalldark-placeholder-color: #e4e7ea;     --dark-placeholder-color: #c3c3c3;     --ultradark-placeholder-color: #887f7f;     --light-notice-color: #fffca0;     --middle-notice-color: #fff575;     --dark-notice-color: #f2ec9e;     --travail-color: #6aaf11;     --contenu-color: #0c91c6;     --search-color: #a5a7ab; }                                      .active .overlay {     background: linear-gradient(rgba(13,79,147,0) ,rgba(0,0,0,0)) !important;     opacity: 1;}                                                           .overlay {     position: absolute;     top: 0;     left: 0;     right: 0;     bottom: 0;     display: flex;     background: ${Color1Param ?color2rgba : "#ffffff50"} ! important;     text-align: center;     color: #fff;     opacity: 0;     transition: all .5s; }`
