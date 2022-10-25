@@ -5,4 +5,4 @@
 * profile picture
 * homework on schedule
 
-![ecole directe customizer logo](https://i.ibb.co/KbF0by2/Logo.png)
+![ecole directe customizer logo](https://i.ibb.co/Cv3TNFs/Logo-copy.png)
