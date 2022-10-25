@@ -142,6 +142,9 @@ chrome.storage.local.get(["FirstTimeUsingTheExtension"] , (responce) => {
 
 
 function RunMainContent() {
+    function onAppears(selector , callback){
+        waitForElm(selector).then(elm => {callback(elm)})
+    }
 
     function onPathInclude(path , callback) { 
         if (window.location.pathname.includes(path)) {
@@ -269,6 +272,7 @@ function RunMainContent() {
         customImage = responce.customImage
         let Params = responce.Parameters
         const enableAverageAutoCalc = Params.AverageCalculator
+        const WorkOnSchedule = Params.WorkOnSchedule
         let Color1Param = Params.Color1Checked;
         let Color2Param = Params.Color2Checked;
         let BackgroundColorParam = Params.BackgroundColorChecked;
@@ -558,6 +562,7 @@ function RunMainContent() {
             MulticolorParam,
             Multicolor , 
             enableAverageAutoCalc,
+            WorkOnSchedule,
         ]
 
         window.addEventListener("load", (e)=> {
@@ -575,7 +580,7 @@ function RunMainContent() {
 
 
 
-    function ChangeStyle(colorSaved3,colorSaved,colorSaved2,Color1Param,Color2Param,BackgroundColorParam,ChangeImage,MulticolorParam,Multicolor,enableAverageAutoCalc){
+    function ChangeStyle(colorSaved3,colorSaved,colorSaved2,Color1Param,Color2Param,BackgroundColorParam,ChangeImage,MulticolorParam,Multicolor,enableAverageAutoCalc,WorkOnSchedule){
     //console.log("%c Main Function has runed", "font-size :30px")
     StopLoadingAnimation()
             let color2rgba = FindRGBA(colorSaved2)
@@ -898,7 +903,17 @@ function RunMainContent() {
         
         window.onresize = setGraphicColor
 
-        const WorkOnSchedule = true
+
+
+/*
+        __          __        _       ____           _____      _              _       _      
+        \ \        / /       | |     / __ \         / ____|    | |            | |     | |     
+         \ \  /\  / /__  _ __| | __ | |  | |_ __   | (___   ___| |__   ___  __| |_   _| | ___ 
+          \ \/  \/ / _ \| '__| |/ / | |  | | '_ \   \___ \ / __| '_ \ / _ \/ _` | | | | |/ _ \
+           \  /\  / (_) | |  |   <  | |__| | | | |  ____) | (__| | | |  __/ (_| | |_| | |  __/
+            \/  \/ \___/|_|  |_|\_\  \____/|_| |_| |_____/ \___|_| |_|\___|\__,_|\__,_|_|\___|
+                                                                                              
+             */                                                                                 
 
         if (WorkOnSchedule) {
 
@@ -988,7 +1003,6 @@ function RunMainContent() {
                                     if (i === dateArray.length -1){
                                         addBoxMetaData(dateArray)
                                         setTimeout(() => {addWorkIcon()},1000)                                        
-                                        console.log(Data)
                                     }
                                 }
                             })
@@ -1004,8 +1018,19 @@ function RunMainContent() {
                 }
             }
 
+            function getColor(object){
+                if (object.interrogation){
+                    return "red"
+                }else if (object.aFaire.effectue) {
+                    return "green"
+                }else {
+                    return "black"
+                }
+            }
+
             async function addWorkIcon(){
                 await waitForElm(".dhx_scale_holder");
+
                 [...document.querySelectorAll(".dhx_scale_holder_now") , ...document.querySelectorAll(".dhx_scale_holder")].splice(0,5)
                 .forEach((column) => {
                     [...column.children].forEach((box) => {
@@ -1019,7 +1044,8 @@ function RunMainContent() {
                                 icon.classList = "extension-homework-icon-jh932n5v304r"
                                 icon.title = "double click pour les devoirs"
                                 icon.src = chrome.runtime.getURL("Icon/work-icon2.svg")
-                                icon.style = `cursor : pointer ;position:absolute ; height: 3rem ; width: 3rem; z-index : 1 ;translate: -10rem -1rem;filter: drop-shadow(0px 0px 5px ${Data[date][matiere].interrogation ? "red" : "black" });`
+                                const color = getColor(Data[date][matiere])
+                                icon.style = `cursor : pointer ;position:absolute ; height: 3rem ; width: 3rem; z-index : 1 ;translate: -10rem -1rem;filter: drop-shadow(0px 0px 5px ${color});`
                                 box.children[1].appendChild(icon)
                             }
                         }
@@ -1043,9 +1069,10 @@ function RunMainContent() {
                 getWorkData(document.querySelector(".dhx_cal_date"))
                 document.querySelectorAll(".dhx_cal_event").forEach(box => {
                     box.addEventListener("dblclick" , (e) => {
-                        if (new Date().getTime() - epoch < 100) return
+                        if (new Date().getTime() - epoch < 100) return                        
                         epoch = new Date().getTime()
                         waitForElm(".modal-body>.ng-star-inserted").then(elm => {
+                            const box1 = e.target
                             const date = box.getAttribute("data-date")
                             const matiere = box.getAttribute("data-matiere")
                             const baseHTML = elm.innerText
@@ -1062,7 +1089,7 @@ function RunMainContent() {
                                     <span style="color : var(--light-primary-color);font-weight : bold ; font-size : 1.6rem">${matiere} - Devoirs</span>
                                     ${getInput(true)}
                                     ${Data[date][matiere].interrogation ? `<br><span style="font-size : 1.5rem;font-weight : bold; color :  rgb(221,0,0) ">Contrôle</span>` : ""}
-                                    </br></br><span style=${Data[date][matiere].aFaire.effectue ? "text-decoration:line-through;" : ""}>${atob(Data[date][matiere].aFaire.contenu)}</span>` 
+                                    </br></br><span style=${Data[date][matiere].aFaire.effectue ? "opacity:0.4;" : ""}>${atob(Data[date][matiere].aFaire.contenu)}</span>` 
                                 }else {
                                     devoirsHTML = ""
                                 }
@@ -1076,19 +1103,45 @@ function RunMainContent() {
                                         const elm = e.target
                                         const checked = elm.checked
                                         if (checked){
-                                            elm.parentElement.lastElementChild.style = "text-decoration:line-through;"
+                                            elm.parentElement.lastElementChild.style = "opacity:0.4;"
                                         }else {
                                             elm.parentElement.lastElementChild.style = ""
                                         }
                                         Data[date][matiere].aFaire.effectue = checked
-                                        /* requete pour effectue :
-                                        fetch("https://api.ecoledirecte.com/v3/Eleves/2076/cahierdetexte.awp?verbe=put&v=4.22.0", {
+                                        const token = JSON.parse(window.sessionStorage.getItem("token"))
+                                        const pupilId = JSON.parse(window.sessionStorage.getItem("accounts")).accounts[0].id
+                                        if (document.querySelector(".pnotify")){
+                                            document.querySelector(".pnotify").parentElement.remove()
+                                        }
+                                        if (!Data[date][matiere].interrogation){
+                                            console.log(box1)
+                                            if (box1.parentElement.querySelector(".extension-homework-icon-jh932n5v304r") != null) { 
+                                                const icon = box1.parentElement.querySelector(".extension-homework-icon-jh932n5v304r")
+                                                if (checked) {
+                                                    icon.style.filter = "drop-shadow(green 0px 0px 5px)"
+                                                }else {
+                                                    icon.style.filter = "drop-shadow(black 0px 0px 5px)"
+                                                }
+                                            }
+
+                                        }
+                                        fetch(`https://api.ecoledirecte.com/v3/Eleves/${pupilId}/cahierdetexte.awp?verbe=put&v=4.22.0`, {
                                         "headers": {
-                                            "x-token": ""
+                                            "x-token": token
                                         },
-                                        "body": "data={\n    \"idDevoirsEffectues\": [],\n    \"idDevoirsNonEffectues\": [\n        6952\n    ]\n}",
+                                        "body": `data={\n    \"idDevoirsEffectues\": ${checked ? `[${Data[date][matiere].id}]` : "[]"},\n    \"idDevoirsNonEffectues\": ${!checked ? `[${Data[date][matiere].id}]` : "[]"}}`,
                                         "method": "POST",
-                                        }) */
+                                        }).then(req => {
+                                            req.json().then(data => {
+                                                const div = document.createElement("div")
+                                                div.innerHTML = `<div data-pnotify="" style="opacity : 1; position : fixed; top : -2rem ; left : 45vw;" class="pnotify pnotify-positioned pnotify-with-icon bootstrap3-elem pnotify-mode-no-preference success nonblock pnotify-in pnotify-move pnotify-stack-down pnotify-fade-normal    " aria-live="assertive" role="alertdialog" style="right: 25px; top: 25px;"><div class="pnotify-container alert alert-warning pnotify-shadow " style="width: 360px; min-height: 16px;" role="alert">   <div class="pnotify-icon bootstrap3-icon"><span class="icon-ed_cahierdetexte"></span></div> <div class="pnotify-content bootstrap3-content"> <div class="pnotify-title bootstrap3-title"><span class="pnotify-pre-line">Cahier de texte</span></div> <div class="pnotify-text bootstrap3-text pnotify-text-with-max-height" style="max-height: 200px;" role="alert">Votre mise à jour a bien été prise en compte !</div> </div> </div></div>`
+                                                elm.parentElement.parentElement.appendChild(div)
+                                               window.setTimeout(() => {
+                                                    div.firstElementChild.style.opacity = "0"
+                                                    div.remove()
+                                                },2000)
+                                            })
+                                        })
                                     })
                                 }
                             }else {
@@ -1111,16 +1164,39 @@ function RunMainContent() {
                 })
             }
 
-            onPathInclude("/EmploiDuTemps" , () => {
-                document.querySelector(".dhx_cal_next_button").addEventListener("click", () => {
-                    main()
+            function MainOnChange(selector) {
+                waitForElm(selector).then(elm => { 
+                    elm.addEventListener("change", () => { 
+                        main()
+                    })
                 })
-                document.querySelector(".dhx_cal_prev_button").addEventListener("click", () => {
-                    main()
+            }
+
+            function mainConfiguration() { 
+                waitForElm(".dhx_cal_next_button").then(elm => {
+                    document.querySelector(".dhx_cal_next_button").addEventListener("click", () => {
+                        main()
+                    })
+                    document.querySelector(".dhx_cal_prev_button").addEventListener("click", () => {
+                        main()
+                    })
                 })
+
 
                 waitForElm(".dhx_cal_date").then(elm => {
                     main()
+                })
+                MainOnChange("#agenda-2076-E-GEN")
+                MainOnChange("#agenda-2076-E-EDT")
+            }
+            
+
+            onPathInclude("/EmploiDuTemps" , () => {
+                mainConfiguration()
+            })
+            waitForElm(".icon-ed_edt").then(elm => {
+                elm.parentElement.parentElement.parentElement.addEventListener("click", () => {
+                    mainConfiguration()
                 })
             })
 
@@ -1154,114 +1230,13 @@ function RunMainContent() {
 
 
     /* 
-        span[accordion-heading] {
-            color : #ebebeb
-        }
-    
-    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-        background-color: #ff0000;
-        border: 1px solid black;
-    }
 
-
-    .nav-tabs-container-bg.tab-container>ul>li>a:hover, .nav-tabs-container-bg>li>a:hover { border: none;}
-    .table>tbody>tr:hover>td:not(.screen-reader) {background: #00000000;}
-    .nav-pills>li.active>a
-    #documentProperties  ,  #spreadEven  , #spreadOdd  , #spreadNone ,   #scrollWrapped , #scrollPage , #scrollVertical , #scrollHorizontal {color : #ebebeb !important}
-    svg > path {color : #ebebeb;}
-    ngx-extended-pdf-viewer .toolbar {border-bottom: 1px solid #626262;}
-    ngx-extended-pdf-viewer #toolbarContainer, ngx-extended-pdf-viewer .findbar, ngx-extended-pdf-viewer .secondaryToolbar {    background-color: #2c2c2c;}
-    #viewer {    background: #2c2c2c;}
-    .cke_combo_on a.cke_combo_button, .cke_combo_off a.cke_combo_button:hover, .cke_combo_off a.cke_combo_button:focus, .cke_combo_off a.cke_combo_button:active {color: #ebebeb !important;background: #212121;border: none !important;border-radius: 3px; }
-    a.cke_dialog_ui_button:hover {background: #9d0000 !important;} #cke_212_uiElement{ background: #c70000;   border: 0px solid #bcbcbc !important; height : 25px !important; }
-    select.cke_dialog_ui_input_select {   background-color: #323232; }
-    #login > div.col-lg-4.col-md-5.login-container > header > h1 {color : #ebebeb}
-    .login-container[_ngcontent-xwc-c63] header[_ngcontent-xwc-c63] h1[_ngcontent-xwc-c63] {color :}
-    .cke_reset_all, .cke_reset_all *, .cke_reset_all a, .cke_reset_all textarea { color: #ebebeb !important; }
-    a.cke_dialog_tab_selected ,  a.cke_dialog_tab {   background: #323232!important;}
-        border-bottom-color: #323232;
-    #cke_dialog_contents_62
-    .cke_dialog_contents_160 , .cke_dialog_footer , .cke_dialog_body { background: #414141; color : #ebebeb !important }.cke_dialog_title { background: #323232 !important; color : #ebebeb!important}
-
-    a.cke_button_off:hover, a.cke_button_off:focus, a.cke_button_off:active , {background: #252525 !important;border-radius: 3px !important;border: none !important;}
-    a.cke_button_off:hover, a.cke_button_off:focus, a.cke_button_off:active , {background: #252525;border-radius: 3px;border: none;padding: 3px 5px;}
-
-    .text-enseignant {color: #ffffff;}
-    .text-danger {color : rgb(221,0,0) }
-
-    #dropdown2 {background: #414141;}
-    background: #414141;
-    .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {color: #ebebeb;text-decoration: none; background-color: #323232;}
-    #dropdown-annees { color: #ebebeb; background: #414141;} #dropdown-annees:hover { color: #ebebeb; background: #323232;}
-    document.querySelector("#highcharts-crrbscl-0 > svg > rect.highcharts-background").fill = "rgb(50,50,50)"
-    tr:hover {color : red}
-    .btn-default.active, .btn-default.active:focus, .btn-default.active:hover, .open>.dropdown-toggle.btn-default, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {color :#ebebeb;}
-    .cke_top {border-bottom: 1px solid #262626 !important;background: #323232 !important;}
-    .cke_chrome {border: 1px solid #1e1e1e;}
-    #cke_1_contents {background: rgb(50, 50, 50);}
-    .cke_bottom {border-top: 1px solid #414141;background: #323232;}
-    #container-messagerie-compose > form > div:nth-child(1) > div.col-sm-12.col-md-5.col-lg-6 > div > span {color: #ebebeb;}
-    .cke_wysiwyg_frame, .cke_wysiwyg_div {background-color: #323232;color: #ebebeb;}
-    .btn-blanc {background: #414141; border: none;}
-
-    .breadcrumb>.active {color: #ebebeb; } .breadcrumb.titre-page li.active:last-child:before { color: #ebebeb !important;}
-    .pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover {   background-color: #414141;   border-color: #ddd0;}
-    .pagination>li>a, .pagination>li>span {    background-color: #323232; border: 1px solid #414141;}
-    .form-control {     background-color: #323232; color : #ebebeb}
-    textarea:focus {background-color: #323232;}
-    #libelle {color : #ebebeb}#url {color : #ebebeb}
-    .modal-content .modal-header button.btn-close i.fa-close {    color: #ebebeb; }
-    #valeur {color : #ebebeb}
-    hr {border-top: 1px solid #414141;}
-    .help-block  {color: #d5d5d5;}
-    .table-hover>tbody>tr:hover {background-color: #000000;}
-    .cloud .btn-breadcrumb .btn.btn-link:not(:last-child):after { border-left: 10px solid #414141; }
-    .cloud .btn-breadcrumb .btn.btn-link { background: #414141; }
-
-    #container-menu {background : #323232 !important }
-    .ed-menu .profile {background: no-repeat center center/100% ${C};}
-
-    button:hover {background-color : #323232 !important}
-
-    .container-bg {background : !important }
-    #item-contact-famille-eleve > a {background-color: #404040 !important;} #footer > ul > li:nth-child(3) > a {background-color: #404040 !important;}
-    #footer > ul > li.hidden-xs.hidden-sm > a { background-color: #323232 !important;}
-    body {
-        font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
-        line-height: 1.42857143;
-        color: #ebebeb ! important;
-        background-color: #ebebeb; !important;
-    }
-
-    button.btn.btn-link:not(.blue-link) {
-        color: #ebebeb;
-    }
-
-    .mdp-lost[_ngcontent-nok-c62] {
-        float: right;
-        margin: -3vh 0 4vh;
-        font-style: italic;
-        color: #ff6161;
-    }
-
-    .version-site[_ngcontent-nok-c63] {
-        color: #ebebeb;
-    }
-
-    .login-container[_ngcontent-nok-c63] header[_ngcontent-nok-c63] h1[_ngcontent-nok-c63] {
-        font-size: 15px;
-        color: #ebebeb;
-        margin-top: 5px;
-    }
-    */
-    /*
     noir :#323232;
     noir clair : #414141;
     blanc : #ebebeb;
 
+*/
 
-    text size => document.querySelector("#cke_123")
-    */
 
 
 }

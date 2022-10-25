@@ -1,6 +1,6 @@
-Extension current Feature :
-
-1 - color changing
-2 - auto log in
-3 - average calculation
-4 - profile picture
+## Extension current Features:  ##
+* color changing
+* auto log in
+* average calculation
+* profile picture
+* homework on schedule

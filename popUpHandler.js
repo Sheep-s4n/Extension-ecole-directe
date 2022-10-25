@@ -9,7 +9,16 @@ chrome.storage.local.get(["FirstTimeUsingTheExtension"] , (responce) => {
         chrome.storage.sync.set({choosenColor1 : obj1})
         let obj2 = JSON.stringify({Active : true, Color : "#0f8fd1" , Equiped : true})
         chrome.storage.sync.set({choosenColor2 : obj2})
-        chrome.storage.local.set({Parameters : {BackgroundColorChecked: true, Color1Checked: true,Color2Checked: true ,ProfilePicture: true , Multicolor : false , AutoLogIn : false , AverageCalculator : true}})
+        chrome.storage.local.set({Parameters : {BackgroundColorChecked: true, 
+            Color1Checked: true,
+            Color2Checked: true ,
+            ProfilePicture: true , 
+            Multicolor : false , 
+            AutoLogIn : false , 
+            AverageCalculator : true , 
+            WorkOnSchedule : false,
+
+        }})
         chrome.storage.local.set({customImage : "https://th.bing.com/th/id/R.ea411ebf6153f5f3201aa5a134949f3e?rik=TMsZisGUrPRPSA&pid=ImgRaw&r=0"})
         chrome.storage.local.set({ImageProvenence : "Link"})
         chrome.storage.local.set({FirstTimeUsingTheExtension : "nope"})
@@ -848,7 +857,8 @@ if (responce.FirstTimeUsingTheExtension !== undefined){
             id : "ImageColorCheckBox",
             main : defaultMain("#FourthPart")
         },
-        AverageCalculator : "AverageCalculator"
+        AverageCalculator : "AverageCalculator",
+        WorkOnSchedule : "WorkOnSchedule"
     }
     // to create new = ~{value name (in json)} : ~{input id}
     

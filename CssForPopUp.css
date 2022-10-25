@@ -98,7 +98,8 @@ input[type="checkbox"] {
 }
 
 #ParamUI {
-    left: 35px;
+    width: 60vw;
+    left: 12vw;
 }
 
 .Transparent {
