@@ -1,3 +1,5 @@
+![ecole directe customizer logo](https://i.ibb.co/Cv3TNFs/Logo-copy.png)
+
 ## Extension current Features:  ##
 * color changing
 * auto log in
@@ -5,4 +7,3 @@
 * profile picture
 * homework on schedule
 
-![ecole directe customizer logo](https://i.ibb.co/Cv3TNFs/Logo-copy.png)
