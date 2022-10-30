@@ -172,6 +172,28 @@ function RunMainContent() {
         });
     }
 
+    function waitForElmRemove(selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector) == null) {
+                return resolve(`document.querySelector(${selector}) doesn't exist`);
+            }
+    
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector) == null) {
+                    resolve(`document.querySelector(${selector}) got removed`);
+                    observer.disconnect();
+                }
+            });
+    
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    }
+
+
+
     let LoadingAnimation = document.createElement("div")
     LoadingAnimation.innerHTML = 
     `<div style="    position: fixed;     top: 0px;     left: 0px;     height: 100%;     width: 100%;     background-color: #000000c9;     z-index: 50;"></div><div style="z-index : 51;position : fixed; top : 45%; right : 45%;"><div class="loadingio-spinner-ellipsis-8eibfvar66v"><div class="ldio-jswtrtkp4z">
@@ -952,7 +974,8 @@ function RunMainContent() {
                 }
             }
 
-            function getDate(elm){
+            function getDate(){
+                const elm = document.querySelector(".dhx_cal_date")
                 const month = getMonth(elm.innerText.split(" ")[1])
                 let startDate = elm.innerText.split(" – ")[0].split(" ")
                 startDate[1] = month
@@ -973,8 +996,8 @@ function RunMainContent() {
                 return final
             }
 
-            async function getWorkData(elm){
-                const validDate = getDate(elm)
+            async function getWorkData(){
+                const validDate = getDate()
                 const dateArray = getDateArray(validDate)
                 addBoxMetaData(dateArray)
                 if (validDate != null && !(dateArray[0] in Data)){
@@ -1030,7 +1053,6 @@ function RunMainContent() {
 
             async function addWorkIcon(){
                 await waitForElm(".dhx_scale_holder");
-
                 [...document.querySelectorAll(".dhx_scale_holder_now") , ...document.querySelectorAll(".dhx_scale_holder")].splice(0,5)
                 .forEach((column) => {
                     [...column.children].forEach((box) => {
@@ -1066,7 +1088,9 @@ function RunMainContent() {
             }
 
             function WorkOnScheduleHandling(){
-                getWorkData(document.querySelector(".dhx_cal_date"))
+                // make request for info and add icons
+                getWorkData()
+                // add the info when it get clicked
                 document.querySelectorAll(".dhx_cal_event").forEach(box => {
                     box.addEventListener("dblclick" , (e) => {
                         if (new Date().getTime() - epoch < 100) return                        
@@ -1154,21 +1178,27 @@ function RunMainContent() {
 
             function main(){
                 onPathInclude("/EmploiDuTemps" , () => {
+                    let functionStarted = false
                     StopLoadingAnimation()
                     PlayLoadingAnimation()
-                    waitForElm(".dhx_cal_event").then(elm => { 
+                    waitForElm(".dhx_body").then(elm => {
                         setTimeout(() => {
+                            functionStarted = true
                             WorkOnScheduleHandling() 
-                        }, 400)
+                        }, 200)
                     })  
+                    setTimeout(() => {
+                        if (!functionStarted){
+                            StopLoadingAnimation()
+                            return
+                        }
+                    }, 1000)
                 })
             }
 
             function MainOnChange(selector) {
-                waitForElm(selector).then(elm => { 
-                    elm.addEventListener("change", () => { 
-                        main()
-                    })
+                selector.previousElementSibling.previousElementSibling.addEventListener("change", () => { 
+                    main()
                 })
             }
 
@@ -1186,19 +1216,22 @@ function RunMainContent() {
                 waitForElm(".dhx_cal_date").then(elm => {
                     main()
                 })
-                MainOnChange("#agenda-2076-E-GEN")
-                MainOnChange("#agenda-2076-E-EDT")
+                waitForElm(".checkmark.default.margin-whitespace.ng-star-inserted").then(() => {
+                    [ ...document.querySelectorAll(".libelle-agenda")].forEach(agenda => {
+                        MainOnChange(agenda)
+                    })
+                })
             }
             
-
-            onPathInclude("/EmploiDuTemps" , () => {
-                mainConfiguration()
-            })
-            waitForElm(".icon-ed_edt").then(elm => {
-                elm.parentElement.parentElement.parentElement.addEventListener("click", () => {
+            (function runMain(){
+                waitForElm(".glyphicon").then(elm => {
+                    console.log("run main!")
                     mainConfiguration()
+                    waitForElmRemove(".glyphicon").then(msg => {
+                        runMain()
+                    }) 
                 })
-            })
+            })();
 
             window.addEventListener('resize',  main);
         }
