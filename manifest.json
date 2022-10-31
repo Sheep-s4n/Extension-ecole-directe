@@ -1,7 +1,7 @@
 {
     "manifest_version" : 3 ,
     "name" : "Ecole directe customizer",
-    "version" : "1.5",
+    "version" : "1.5.5",
     "description" : "Extension pour personnaliser Ecole directe",
     "content_scripts": [{
         "matches" : ["https://www.ecoledirecte.com/*"] ,
