@@ -142,9 +142,21 @@ chrome.storage.local.get(["FirstTimeUsingTheExtension"] , (responce) => {
 
 
 function RunMainContent() {
+
+    function debounceInit(callback , millisecond) {
+        let epoch = new Date().getTime()
+        return () => {
+            if ((new Date().getTime() - epoch) > millisecond){
+                epoch = new Date().getTime()
+                callback()
+            }       
+        }
+    }
+
     function onAppears(selector , callback){
         waitForElm(selector).then(elm => {callback(elm)})
     }
+
 
     function onPathInclude(path , callback) { 
         if (window.location.pathname.includes(path)) {
@@ -152,7 +164,7 @@ function RunMainContent() {
         }
     }
 
-    function waitForElm(selector) {
+    function waitForElm(selector) { // thx stackoverflow =)
         return new Promise(resolve => {
             if (document.querySelector(selector)) {
                 return resolve(document.querySelector(selector));
@@ -170,6 +182,12 @@ function RunMainContent() {
                 subtree: true
             });
         });
+    }
+
+    function wait(seconds) {
+        return new Promise(resolve => {
+            setTimeout(() => resolve(), seconds * 1000);
+        })
     }
 
     function waitForElmRemove(selector) {
@@ -380,7 +398,8 @@ function RunMainContent() {
                     }
                 }else {
                     let isLoggingIn = false
-                    window.addEventListener("click" , (e) => {
+                    
+                    function onClick(e){
                         if (e.ctrlKey){
                             if (!isLoggingIn){                                
                                 isLoggingIn = true
@@ -389,7 +408,15 @@ function RunMainContent() {
                                 LogUser(username, password)
                             }
                         }
+                    }
 
+                    window.addEventListener("click",onClick)
+                    
+                    waitForElm(".icon-ed_deconnexion").then(() => {
+                        if (document.querySelector("body > div.log-in-pop-up") != null){
+                            document.querySelector("body > div.log-in-pop-up").remove()
+                            window.removeEventListener("click",onClick)
+                        } 
                     })
 
                     const styles = document.createElement("style")
@@ -736,7 +763,9 @@ function RunMainContent() {
         
         function setGraphicColor(){
             if (colorSaved3 === "rgb(35, 35, 35)"){ 
+                PlayLoadingAnimation()
                 window.setTimeout(() => {
+                    StopLoadingAnimation();
                     [...document.querySelectorAll(".highcharts-background")].forEach(elm => {
                         elm.setAttribute("fill", "#484848")
                     });
@@ -744,8 +773,11 @@ function RunMainContent() {
                         if (elm.x.animVal[0].valueAsString !== "21"){
                             elm.style.fill = "#ebebeb"
                         }
-                    })
-                },5)
+                    });
+                    [...document.querySelectorAll(".highcharts-text-outline")].forEach(elm => {
+                        elm.setAttribute("stroke" , "#333")
+                    });
+                },500)
             }
         }
         
@@ -890,44 +922,37 @@ function RunMainContent() {
             })
         }
 
-
-
         function graphicMain(){
             ChangeOnTabClick()
             GraphicModeHandler()
             ChangeOnBtnGraphicClick()
         }
-        
-        waitForElm(".icon-ed_carnetnotes").then(elm => {
-            elm.parentElement.parentElement.parentElement.addEventListener("click", () => {
-                if (document.querySelector(".table.releve.ed-table") != null){
-                    graphicMain()
-                    averageHandling(0)
-                }
-            })
-        })
 
-        waitForElm(".table.releve.ed-table").then(elm => { 
-            graphicMain()
-            averageHandling(0)
-        })
-        
-        
         waitForElm(".highcharts-background").then(elm => { 
-            setGraphicColor()
+           setGraphicColor()
         })
 
-        onPathInclude("/Notes" , () => {
-            waitForElm("tbody").then(elm => { 
+        function runMainAverage(){
+            waitForElm(".ng-star-inserted.active.sousperiode").then(elm => {
+                console.log("run main (average)!")
+                graphicMain()
                 averageHandling(0)
+                waitForElmRemove(".ng-star-inserted.active.sousperiode").then(msg => {
+                    runMainAverage()
+                }) 
             })
-        })
+        }
+        runMainAverage()
         
-        window.onresize = setGraphicColor
 
-
-
-/*
+        const debounce = debounceInit(setGraphicColor , 200) // init closure
+        window.onresize = () => {
+            debounce()
+        } 
+        
+        
+        
+        /*
         __          __        _       ____           _____      _              _       _      
         \ \        / /       | |     / __ \         / ____|    | |            | |     | |     
          \ \  /\  / /__  _ __| | __ | |  | |_ __   | (___   ___| |__   ___  __| |_   _| | ___ 
@@ -1073,6 +1098,7 @@ function RunMainContent() {
                         }
                     })
                 })
+                // ok its this
                 StopLoadingAnimation()
             }
 
@@ -1197,7 +1223,8 @@ function RunMainContent() {
             }
 
             function MainOnChange(selector) {
-                selector.previousElementSibling.previousElementSibling.addEventListener("change", () => { 
+                selector.previousElementSibling.previousElementSibling.addEventListener("change",async () => { 
+                    await wait(0.1)
                     main()
                 })
             }
@@ -1219,6 +1246,12 @@ function RunMainContent() {
                 waitForElm(".checkmark.default.margin-whitespace.ng-star-inserted").then(() => {
                     [ ...document.querySelectorAll(".libelle-agenda")].forEach(agenda => {
                         MainOnChange(agenda)
+                    })
+                })
+
+                waitForElm("#view-week").then(elm => {
+                    elm.addEventListener("click", () => {
+                        main()
                     })
                 })
             }
