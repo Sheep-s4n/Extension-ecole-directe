@@ -7,3 +7,6 @@
 * profile picture
 * homework on schedule
 
+## Extension version: ##
+
+Current version : 1.5.7
