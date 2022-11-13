@@ -814,7 +814,7 @@ function RunMainContent() {
             if (!average) average = ""
             const HTML = `
             <td class="discipline">
-            <span class="nommatiere"><b style="color : var(--secondary-color);">MOYENNE GENERALE</b></span></td>
+            <span class="nommatiere"><b style="color : ${MulticolorParam ? "var(--light-primary-color)" : "var(--secondary-color)"};">MOYENNE GENERALE</b></span></td>
             <td class="relevemoyenne ng-star-inserted"><span
              ${average === "" ? `style="position : absolute;"` : `title="Moyenne calculée grace à l'API d'école directe"`} 
              class="ng-star-inserted">${average === "" ? smallAnimationHTML : average.replace(".",",")}</span></td>
@@ -1077,7 +1077,8 @@ function RunMainContent() {
             }
 
             async function addWorkIcon(){
-                await waitForElm(".dhx_scale_holder");
+                await waitForElm(".dhx_scale_holder")
+                WorkOnScheduleHandling();
                 [...document.querySelectorAll(".dhx_scale_holder_now") , ...document.querySelectorAll(".dhx_scale_holder")].splice(0,5)
                 .forEach((column) => {
                     [...column.children].forEach((box) => {
@@ -1114,10 +1115,15 @@ function RunMainContent() {
             }
 
             function WorkOnScheduleHandling(){
-                // make request for info and add icons
-                getWorkData()
+                const validBoxes = [...document.querySelectorAll(".dhx_cal_event")].filter((elm) => {
+                    const date = elm.getAttribute("data-date")
+                    const matiere = elm.getAttribute("data-matiere")
+                    if (!(date in Data)) return false
+                    if (Data[date][matiere] && Data[date][matiere].hasOwnProperty("aFaire")) return true
+                    return false
+                })
                 // add the info when it get clicked
-                document.querySelectorAll(".dhx_cal_event").forEach(box => {
+                validBoxes.forEach(box => {
                     box.addEventListener("dblclick" , (e) => {
                         if (new Date().getTime() - epoch < 100) return                        
                         epoch = new Date().getTime()
@@ -1210,7 +1216,8 @@ function RunMainContent() {
                     waitForElm(".dhx_body").then(elm => {
                         setTimeout(() => {
                             functionStarted = true
-                            WorkOnScheduleHandling() 
+                            // make request for info and add icons
+                            getWorkData();
                         }, 200)
                     })  
                     setTimeout(() => {
