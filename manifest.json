@@ -10,7 +10,7 @@
     }],
     "action" : {
         "default_popup" : "popUp.html",
-        "default_title" : "Rapelleur pour aller manger"
+        "default_title" : "Ecole directe customizer"
     },
     "homepage_url": "https://github.com/The-Sheep-Noob/Extension-ecole-directe",
     "permissions": [
