@@ -896,7 +896,6 @@ function RunMainContent() {
         }
         
         function ChangeOnTabClick(){
-            setPeriodId(); 
             [...document.querySelectorAll("[data-toggle='tab']")].forEach(elm => {                         
                 elm.addEventListener("click", () => { 
                     
@@ -939,11 +938,17 @@ function RunMainContent() {
            setGraphicColor()
         })
 
+        function getCurrentTabID(){
+            const tab = document.querySelector(".nav-tabs>li.active>a")
+            return tab.getAttribute("data-id") ?? null
+        }
+
         function runMainAverage(){
             waitForElm(".ng-star-inserted.active.sousperiode").then(elm => {
                 console.log("run main (average)!")
+                setPeriodId()
                 graphicMain()
-                averageHandling(0)
+                averageHandling(getCurrentTabID())
                 waitForElmRemove(".ng-star-inserted.active.sousperiode").then(msg => {
                     runMainAverage()
                 }) 
