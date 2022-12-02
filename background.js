@@ -1,4 +1,4 @@
-const development = true;
+const development = false;
 
 if (!development) {
     console.log = (() => {}) // removing logs in production
@@ -387,7 +387,7 @@ function RunMainContent() {
             if (window.sessionStorage.getItem("token") && window.location.pathname !== "/login"){ // if loged in 
                 waitForElm("#connexion").then((elm) => {
                     clearAllStorage()
-                    window.location.replace(`https://www.ecoledirecte.com/login${window.location.pathname !== "/login" ? "cameFrom=" + encodeURIComponent(window.location.pathname) :  ""}`) // make a login instead of redirecting
+                    window.location.replace(`https://www.ecoledirecte.com/login${window.location.pathname !== "/login" ? "?cameFrom=" + encodeURIComponent(window.location.pathname) :  ""}`) // make a login instead of redirecting
                 })
 
                 if (!window.localStorage.getItem("token") && !window.localStorage.getItem("accounts")){
@@ -1103,7 +1103,7 @@ function RunMainContent() {
                                 icon.alt = "icon des devoirs"
                                 icon.classList = "extension-homework-icon-jh932n5v304r"
                                 icon.title = "double click pour les devoirs"
-                                icon.src = chrome.runtime.getURL("Icon/work-icon2.svg")
+                                icon.src = "https://i.ibb.co/B6YGk7z/work-icon2.png"
                                 const color = getColor(Data[date][matiere])
                                 icon.style = `cursor : pointer ;position:absolute ; height: 3rem ; width: 3rem; z-index : 1 ;translate: -10rem -1rem;filter: drop-shadow(0px 0px 5px ${color});`
                                 box.children[1].appendChild(icon)
@@ -1111,7 +1111,6 @@ function RunMainContent() {
                         }
                     })
                 })
-                // ok its this
                 StopLoadingAnimation()
             }
 

@@ -1,0 +1,57 @@
+@keyframes disappear {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        translate: -0.5rem;
+    }
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        translate: -0.5rem;
+    }
+    to {
+        opacity: 1;
+        translate: 0rem;
+    }
+}
+
+@keyframes rainbow-text {
+    0% {
+        color: red;
+    }
+    10% {
+        color: rgb(230, 176, 0);
+    }
+    20% {
+        color: rgb(204, 226, 0);
+    }
+    30% {
+        color: rgb(0, 212, 0);
+    }
+    40% {
+        color: rgb(0, 197, 82);
+    }
+    50% {
+        color: rgb(0, 172, 202);
+    }
+    60% {
+        color: rgb(0, 81, 255);
+    }
+    70% {
+        color: rgb(68, 0, 255);
+    }
+    80% {
+        color: rgb(195, 0, 255);
+    }
+    90% {
+        color: rgb(204, 0, 170);
+    }
+    100% {
+        color: rgb(255, 0, 0);
+    }
+
+}

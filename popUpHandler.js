@@ -17,8 +17,8 @@ chrome.storage.local.get(["FirstTimeUsingTheExtension"] , (responce) => {
             AutoLogIn : false , 
             AverageCalculator : true , 
             WorkOnSchedule : false,
-
         }})
+        chrome.storage.local.set({darkMode : false})
         chrome.storage.local.set({customImage : "https://th.bing.com/th/id/R.ea411ebf6153f5f3201aa5a134949f3e?rik=TMsZisGUrPRPSA&pid=ImgRaw&r=0"})
         chrome.storage.local.set({ImageProvenence : "Link"})
         chrome.storage.local.set({FirstTimeUsingTheExtension : "nope"})
@@ -934,49 +934,82 @@ if (responce.FirstTimeUsingTheExtension !== undefined){
 
     setInterval(()=> {
         if (navigator.onLine === false){
-            document.querySelector(".no-wifi").style.visibility = "visible"
+            document.querySelector(".no-wifi").style.visibility = "visible !important"
         }else {
-            document.querySelector(".no-wifi").style.visibility = "hidden"
+            document.querySelector(".no-wifi").style.visibility = "hidden !important"
         }
     },1000)
 
-   /* let degrees = 1;
-    let animationStarted = false
-    let animation2Started = false
-    document.querySelector("body > .Settings").addEventListener("mouseover" ,(e) => {
-        if (animation2Started === false){
-                degrees =1
-                const BUTON = e.target
-                animationStarted = true
-                let animation = setInterval(() => {
-                    degrees *= 1.05;
-                    if (degrees > 360){
-                        animationStarted = false
-                            clearInterval(animation)
-                    }else {
-                        BUTON.style.transform = `rotate(${degrees}deg)`;
-                    }
-                }, 5);
-        }
-    })
+/*    _______  _______  ___      _______  ______      __   __  _______  ______   _______  _______ 
+    |       ||       ||   |    |       ||    _ |    |  |_|  ||       ||      | |       ||       |
+    |       ||   _   ||   |    |   _   ||   | ||    |       ||   _   ||  _    ||    ___||  _____|
+    |       ||  | |  ||   |    |  | |  ||   |_||_   |       ||  | |  || | |   ||   |___ | |_____ 
+    |      _||  |_|  ||   |___ |  |_|  ||    __  |  |       ||  |_|  || |_|   ||    ___||_____  |
+    |     |_ |       ||       ||       ||   |  | |  | ||_|| ||       ||       ||   |___  _____| |
+    |_______||_______||_______||_______||___|  |_|  |_|   |_||_______||______| |_______||_______|
+*/
 
-    document.querySelector("body > .Settings").addEventListener("mouseout" ,(e) => { 
-        if (animationStarted === false){
-            const BUTON = e.target
-            let degrees2 = 348.912;
-            animation2Started = true
-        let anim = setInterval(() => {
-                degrees2 /= 1.05;
-                if (degrees2 <= 1){
-                    BUTON.style.transform = `rotate(0deg)`;
-                    animation2Started = false
-                    clearInterval(anim)
-                }else{
-                    BUTON.style.transform = `rotate(${degrees2}deg)`;
-                }
-        }, 5);
+    let darkMode;
+    try {
+        chrome.storage.local.get(["darkMode"] ,async (res) => { 
+            darkMode = await res.darkMode 
+            mainColorMode()
+        })
+    } catch (err) {
+        chrome.storage.local.set({darkMode : false}) 
+        darkMode = false
+        mainColorMode()
+    }
+
+    function mainColorMode() {
+        let debounce = new Date().getTime()
+        
+        function colorModeHandling(colorMode) {
+            const css = document.querySelector("link")
+            if (colorMode) {
+                css.href  = "CssForPopUpNight.css"
+                addClickEventOnImage()
+            } else {
+                css.href  = "CssForPopUp.css"
+                addClickEventOnImage()
+            }
         }
-    })*/
+    
+    
+        function addClickEventOnImage() {
+            const image = document.querySelector("#color-mode")
+            image.addEventListener("click", () => {
+            if (new Date().getTime() - debounce > 400){
+                    darkMode = !darkMode
+                    chrome.storage.local.set({darkMode}) 
+                    if (darkMode) {
+                        changeColorMode("switch to light mode" , "./Icon/sun.png")
+                    } else {
+                        changeColorMode("switch to dark mode" , "./Icon/moon.png")
+                    }
+                    colorModeHandling(darkMode)
+                    debounce = new Date().getTime()
+                    return;
+                }
+            })
+        }
+        
+        function changeColorMode(title , src , hasAnim=true){
+            const image = document.querySelector("#color-mode")
+            const timeMilliseconds = 200;
+    
+            if (hasAnim) image.style.animation = `disappear ${timeMilliseconds}ms forwards ease-in` 
+            window.setTimeout(() => {
+                image.title = title
+                image.src = src
+                if (hasAnim) image.style.animation = `appear ${timeMilliseconds}ms forwards ease-in`
+            },timeMilliseconds)
+        }
+        
+    
+        colorModeHandling(darkMode)
+        darkMode ? changeColorMode("switch to light mode" , "./Icon/sun.png" , false)  :  changeColorMode("switch to dark mode" , "./Icon/moon.png" , false)
+    }
 
 }})
 
