@@ -1,4 +1,4 @@
-const development = true;
+const development = false;
 
 if (!development) {
     console.log = (() => {}) // removing logs in production
@@ -819,15 +819,15 @@ function RunMainContent() {
             })
         }
         
-        function makeAverageElement(average=null , hasClassAverage=false) { 
+        function makeAverageElement(average=null , hasClassAverage=false , classAverage) { 
             if (!average) average = ""
             const HTML = `
             <td class="discipline">
             <span class="nommatiere"><b style="color : ${MulticolorParam ? "var(--light-primary-color)" : "var(--secondary-color)"};">MOYENNE GENERALE</b></span></td>
-            <td class="relevemoyenne ng-star-inserted"><span
+            <td class="relevemoyenne ng-star-inserted" style="font-weight : 700;" ><span
              ${average === "" ? `style="position : absolute;"` : `title="Moyenne calculée grace à l'API d'école directe"`} 
              class="ng-star-inserted">${average === "" ? smallAnimationHTML : average.replace(".",",")}</span></td>
-            <td ${!hasClassAverage? `style="border-left` : "" } : none;" class="notes">${hasClassAverage ? " in development " : ""}</td>
+            <td ${!hasClassAverage? `style="border-left` : "" } : none;" class="notes">${hasClassAverage ? classAverage : ""}</td>
             <td  style="border-left : none;" class="graph text-center"></td>`
             
             if (document.querySelector(".moyenne-ecole-directe-customizer") == null){
@@ -857,14 +857,29 @@ function RunMainContent() {
             return isNaN(average) ? null : average
         }
 
+        function classAverageCalculation(obj){
+            let a = 0
+            let n = 0
+            Object.values(obj).forEach(value => {
+                if (value.moyenneClasse !== ""){
+                    const number = parseFloat(value.moyenneClasse.replace("," , "."))
+                    const coef = parseInt(value.coef === 0 ? 1 : value.coef)
+                    a += (number * coef)
+                    n += coef
+                }
+            })
+            let average = parseFloat(a / n).toFixed(2) 
+            return isNaN(average) ? null : average
+        }
+
         function averageDataHandling(dt , periodNumber , hasClassAverage=false){
             const averageObject = dt.data.periodes[periodNumber].ensembleMatieres.disciplines 
             const average = averageCalculation(averageObject)
             if (!average) {
-                makeAverageElement(" " , hasClassAverage)
+                makeAverageElement(" " , hasClassAverage , classAverageCalculation(averageObject))
                 return
             }
-            makeAverageElement(average , hasClassAverage)
+            makeAverageElement(average , hasClassAverage , classAverageCalculation(averageObject))
         }
         
         async function averageHandling(periodNumber , hasClassAverage=false){

@@ -3,9 +3,9 @@
 ## Extension current Features:
 * color changing
 * auto log in
-* average calculation
+* average and class average calculation
 * profile picture
 * homework on schedule
 
-## Current version : 1.5.7
+## Current version : 1.6
 
